@@ -1,5 +1,5 @@
 import { AnnouncementBar } from "@/components/home/announcement-bar";
-import { CategorySection } from "@/components/home/category-section";
+import { ShopByCategory } from "@/components/home/category-section";
 import { Header } from "@/components/home/header";
 import { HeroSection } from "@/components/home/hero-section";
 import { TrustBenefits } from "@/components/home/trust-benefits";
@@ -12,7 +12,7 @@ export default function Home() {
       <Header />
       <main id="main-content">
         <HeroSection />
-        <CategorySection />
+        <ShopByCategory />
         <TrustBenefits />
       </main>
     </>

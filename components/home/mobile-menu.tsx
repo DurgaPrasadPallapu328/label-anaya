@@ -31,7 +31,7 @@ export function MobileMenu() {
             <Link href="/" aria-current="page" className="drawer-link">Home</Link>
             <Link href="/shop" className="drawer-link">Shop All</Link>
             <div className="my-3 border-t border-olive/20" />
-            {categories.map((category) => <Link key={category.href} href={category.href} className="drawer-link">{category.name}</Link>)}
+            {categories.map((category) => <Link key={category.id} href={`/shop/${category.slug}`} className="drawer-link">{category.name}</Link>)}
             <div className="my-3 border-t border-olive/20" />
             <Link href="/login" className="drawer-link">Your account</Link>
             <Link href="/cart" className="drawer-link">Shopping bag (0)</Link>
