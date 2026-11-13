@@ -1,13 +1,19 @@
-.whatsapp-contact { position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom)); z-index: 30; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: #25d366; color: #fff; box-shadow: 0 3px 12px rgb(0 0 0 / 16%); }
-.whatsapp-contact svg { display: block; width: 28px; height: 28px; }
-.whatsapp-contact:focus-visible { outline: 3px solid #454f20; outline-offset: 4px; }
-/* Allow the end of page content to scroll fully above the fixed contact control. */
-.whatsapp-contact-space { height: calc(80px + env(safe-area-inset-bottom)); }
-body:has(dialog[open]) .whatsapp-contact,
-body:has([data-label-anaya-loader="fullscreen"]) .whatsapp-contact { visibility: hidden; pointer-events: none; }
-@media (min-width: 768px) { .whatsapp-contact { right: max(24px, env(safe-area-inset-right)); bottom: max(24px, env(safe-area-inset-bottom)); width: 52px; height: 52px; } }
+.floating-social-contact { position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom)); z-index: 30; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.floating-social-button { display: grid; place-items: center; flex-shrink: 0; width: 48px; height: 48px; border-radius: 50%; color: #fff; box-shadow: 0 3px 12px rgb(0 0 0 / 16%); }
+.whatsapp-contact { background: #25d366; }
+.instagram-contact { background: linear-gradient(135deg, #833ab4, #c13584 55%, #e1306c); }
+.floating-social-button svg { display: block; width: 28px; height: 28px; }
+.floating-social-button:focus-visible { outline: 3px solid #454f20; outline-offset: 4px; }
+/* Let final page actions scroll fully above both floating controls. */
+.whatsapp-contact-space { height: calc(140px + env(safe-area-inset-bottom)); }
+body:has(dialog[open]) .floating-social-contact,
+body:has([data-label-anaya-loader="fullscreen"]) .floating-social-contact { visibility: hidden; pointer-events: none; }
+@media (min-width: 768px) {
+  .floating-social-contact { right: max(24px, env(safe-area-inset-right)); bottom: max(24px, env(safe-area-inset-bottom)); }
+  .floating-social-button { width: 52px; height: 52px; }
+}
 @media (prefers-reduced-motion: no-preference) {
-  .whatsapp-contact { transition: transform 200ms ease, box-shadow 200ms ease; }
-  .whatsapp-contact:hover { transform: scale(1.05); box-shadow: 0 4px 14px rgb(0 0 0 / 20%); }
-  .whatsapp-contact:active { transform: scale(.98); }
+  .floating-social-button { transition: transform 200ms ease, box-shadow 200ms ease; }
+  .floating-social-button:hover { transform: scale(1.05); box-shadow: 0 4px 14px rgb(0 0 0 / 20%); }
+  .floating-social-button:active { transform: scale(.98); }
 }
