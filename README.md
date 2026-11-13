@@ -190,3 +190,25 @@ product HTTP 404. The final production rebuild was blocked by a Windows EPERM lo
 generated .next file; an earlier build passed before the final image/variant data update.
 Browser interaction, focus behavior, responsive overflow, and console checks still require
 a browser QA pass.
+
+## WhatsApp customer support
+
+The shared root layout mounts WhatsAppContact once. To enable it, add
+NEXT_PUBLIC_WHATSAPP_NUMBER to your untracked .env.local (and hosting environment),
+using the actual WhatsApp-enabled business number with country code and digits only:
+no +, spaces, hyphens, or leading international 00. Leave it unset until the real
+number is confirmed. Restart development after changing it; rebuild/redeploy production.
+It is a public contact number and will be visible in the generated link.
+
+Missing or invalid configuration hides the button entirely. Validation accepts 8?15
+international digits with a nonzero first digit; it cannot verify WhatsApp account
+registration or ownership. Confirm the real destination manually before launch.
+The link uses https://wa.me/ with encodeURIComponent for the requested enquiry text;
+the customer can edit it and nothing sends automatically. No API or credentials are used.
+
+The control is 48px on mobile and 52px on desktop, with safe-area-aware spacing, a
+native ?Chat with us? tooltip, accessible name, keyboard focus, reduced-motion support,
+and one local SVG icon. It hides while any native dialog or fullscreen loader is open.
+A small bottom spacer lets the final page actions scroll above the fixed button.
+Browser checks should confirm visual placement/checkout clearance on target devices
+and open the configured business chat without sending a message.

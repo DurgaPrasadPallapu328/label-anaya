@@ -48,7 +48,7 @@ function Gallery({ images }: { images: readonly ProductImage[] }) {
         </div>
         </div>
         <button ref={trigger} id={mainId} type="button" aria-label={`Enlarge: ${image.alt}`} aria-haspopup="dialog" onClick={() => dialog.current?.showModal()} className="relative order-1 aspect-[4/5] w-full min-w-0 overflow-hidden rounded-xl bg-peach lg:order-2 lg:flex-1">
-          {images.map((view, index) => <Image key={view.id} src={source(view)} alt={index === selected ? view.alt : ""} aria-hidden={index !== selected} onError={() => markFailed(view.src)} fill sizes="(min-width: 1024px) 45vw, 100vw" className={`object-contain motion-safe:transition-opacity motion-safe:duration-200 ${index === selected ? "opacity-100" : "opacity-0"}`} />)}
+          {images.map((view, index) => <Image key={view.id} src={source(view)} alt={index === selected ? view.alt : ""} data-cart-flight-source={index === selected ? "true" : undefined} aria-hidden={index !== selected} onError={() => markFailed(view.src)} fill sizes="(min-width: 1024px) 45vw, 100vw" className={`object-contain motion-safe:transition-opacity motion-safe:duration-200 ${index === selected ? "opacity-100" : "opacity-0"}`} />)}
         </button>
       </div>
       <dialog ref={dialog} aria-labelledby={titleId} className="fixed inset-0 m-auto h-[92dvh] max-h-[92dvh] w-[96vw] max-w-5xl rounded-xl bg-cream" onClose={() => trigger.current?.focus({ preventScroll: true })} onKeyDown={(event) => { if (["ArrowLeft", "ArrowRight"].includes(event.key)) { event.preventDefault(); move(event.key === "ArrowLeft" ? -1 : 1); } }} onClick={(event) => { if (event.target === event.currentTarget) dialog.current?.close(); }}>

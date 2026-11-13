@@ -9,7 +9,7 @@ import { CartBagLink } from "@/components/cart/cart-bag-link";
 
 export function Header({ currentPage = "home" }: { currentPage?: "home" | "cart" | "product" | "wishlist" }) {
   return (
-    <header className="site-header relative bg-cream">
+    <header className="site-header relative">
       <div className="header-inner relative mx-auto flex h-full items-center justify-between">
         <MobileMenu currentPage={currentPage} />
         <Link href="/" className="brand flex items-center" aria-label="Label Anaya home">
