@@ -14,16 +14,18 @@ interface CartViewProps {
 
 export function CartTitle({ count }: { count: number }) {
   return (
-    <div className="cart-title-row">
-      <h1 id="cart-title" tabIndex={-1}>Your Cart <span>({count} {count === 1 ? "Item" : "Items"})</span></h1>
-      <div className="cart-title-rule" aria-hidden="true"><span /><Icon name="leaf" /><span /></div>
-    </div>
+    <header className="cart-page-header">
+      <ContinueShopping />
+      <div className="cart-heading">
+        <h1 id="cart-title" tabIndex={-1}>Your Cart <span>({count} {count === 1 ? "Item" : "Items"})</span></h1>
+      </div>
+    </header>
   );
 }
 
-function ContinueShopping({ className = "" }: { className?: string }) {
+function ContinueShopping() {
   return (
-    <Link href="/#category-heading" className={`cart-continue ${className}`}>
+    <Link href="/#category-heading" className="cart-continue">
       <Icon name="arrow" className="rotate-180" /><span>Continue Shopping</span>
     </Link>
   );
@@ -43,10 +45,9 @@ export function CartView({ items, onQuantityChange, onRemove, onCheckout, checko
           <Icon name="bag" />
           <h2 id="empty-cart-title">Your bag is waiting</h2>
           <p>Explore our collections and find something you love.</p>
-          <ContinueShopping />
         </section>
       ) : (
-        <div className="cart-layout">
+        <div className={`cart-layout${items.length === 1 ? " cart-layout-single" : ""}`}>
           <ul className="cart-items" aria-label="Items in your cart">
             {items.map((item) => <CartItemCard key={item.id} item={item} onQuantityChange={onQuantityChange} onRemove={onRemove} />)}
           </ul>
@@ -60,7 +61,6 @@ export function CartView({ items, onQuantityChange, onRemove, onCheckout, checko
               </dl>
             </section>
             <div className="cart-checkout">
-              <ContinueShopping className="cart-continue-mobile" />
               <button type="button" className="cart-checkout-button"
                 aria-disabled={checkoutUnavailable}
                 onClick={(event) => {
@@ -75,7 +75,6 @@ export function CartView({ items, onQuantityChange, onRemove, onCheckout, checko
               <p className="cart-estimate-note">Estimated total excludes shipping.</p>
             </div>
           </aside>
-          <ContinueShopping className="cart-continue-desktop" />
         </div>
       )}
     </>

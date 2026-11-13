@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useState, type FormEvent } from "react";
+import { openCartDrawer } from "@/lib/cart/drawer";
 import { useRouter } from "next/navigation";
 import type { Product } from "@/lib/products";
 import { preparePurchase } from "@/lib/product-purchase";
@@ -33,6 +34,7 @@ export function ProductPurchase({ product }: { product: Product }) {
         if ((existing?.quantity ?? 0) + Number(quantity) > getCartQuantityLimit(selected)) throw new Error("This quantity would exceed the limit for this size in your bag.");
         cartActions.addItem(selected, Number(quantity));
         setNotice("Added to your shopping bag.");
+        openCartDrawer((event.nativeEvent as SubmitEvent).submitter);
       }
     } catch (cause) { setError(cause instanceof Error && cause.name !== "SecurityError" && cause.name !== "QuotaExceededError" ? cause.message : "Unable to save your selection. Enable browser storage and try again."); }
   }
