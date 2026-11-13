@@ -141,3 +141,52 @@ Known limitations: real catalog, authenticated server-cart persistence, shipping
 inventory verification, payment, and checkout remain pending backend integration.
 Physical-device touch and assistive-technology checks should complement browser
 automation; automated browser checks do not certify screen-reader behavior.
+
+## Product details and demo Buy Now
+
+`app/products/[slug]/page.tsx` resolves URL parameters inside Suspense and composes
+breadcrumbs, ProductImageGallery, the existing price formatter, and ProductPurchase.
+All 40 catalog products use it; the proxy rejects unknown slugs with HTTP 404.
+
+ProductImageGallery accepts `ProductImage[]` with unique id, src, alt, and label.
+The five demo SVG slots are explicitly labelled samples, not garment photographs.
+Replace each src with an existing photograph of the same product and update alt/label
+for front, back, side, neckline, sleeve/embroidery, fabric, or dupatta details.
+Legacy products with only image still work. Images use portrait contain sizing,
+reduced-motion-aware fades, keyboard-accessible thumbnails, and a native modal
+with previous/next, arrows, Escape, focus containment, and focus restoration.
+Desktop shows five thumbnails before scrolling; mobile puts a horizontal row below
+the image. Failed image requests fall back to the existing product placeholder.
+
+Optional per-product sizes contain size (S/M/L/XL), enabled, and optional maxQuantity.
+Demo products have varying size lists with unknown stock; enabled is demo configuration
+not a real availability claim. Quantity has minus/plus controls and an editable input,
+validated against known limits and the existing 99-item application cap.
+
+Add to Cart uses existing cartActions, persistence, variant keys, badge subscriptions,
+and monetary snapshots in paise. Matching product/size merges; different sizes stay
+separate. No login is required. Existing cart removal and normal checkout remain unchanged.
+
+Buy Now validates through preparePurchase and the existing buildCheckoutRequest, storing
+only the chosen line in sessionStorage. A missing demo session leads to /login and
+explicit credential-free demo sign-in, then /checkout. Demo checkout uses that isolated
+selection and never mutates the persisted bag. Completion takes no payment and creates
+no order. Authentication and payment services are not connected.
+
+For backend integration, replace dummy catalog queries, obtain authoritative variant/stock
+data, and implement CheckoutGateway.createSession with authenticated server validation
+of product IDs, variants, quantities, pricing, totals, and redirect destinations. Never
+trust local storage prices or the demo session as authentication. Keep dummy checkout
+separate from production orders/payments until the catalog and backend are ready.
+
+### Product details verification
+
+Run `node --test tests/product-details.test.mjs` for product-specific size/quantity
+validation, existing-cart merging, isolated checkout requests, five valid sample assets,
+and empty/single/multiple-image rendering with unique accessibility IDs. The existing
+`npm run test:cart` suite remains unchanged. TypeScript and ESLint passed; development
+HTTP checks confirmed product/gallery, all five categories, demo routes, cart, and invalid
+product HTTP 404. The final production rebuild was blocked by a Windows EPERM lock on a
+generated .next file; an earlier build passed before the final image/variant data update.
+Browser interaction, focus behavior, responsive overflow, and console checks still require
+a browser QA pass.

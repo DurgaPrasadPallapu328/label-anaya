@@ -6,7 +6,7 @@ import { SearchDialog } from "./search-dialog";
 import { ShopDropdown } from "./shop-dropdown";
 import { CartBagLink } from "@/components/cart/cart-bag-link";
 
-export function Header({ currentPage = "home" }: { currentPage?: "home" | "cart" }) {
+export function Header({ currentPage = "home" }: { currentPage?: "home" | "cart" | "product" }) {
   return (
     <header className="site-header relative bg-cream">
       <div className="header-inner relative mx-auto flex h-full items-center justify-between">

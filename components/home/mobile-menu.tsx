@@ -7,7 +7,7 @@ import { categories } from "@/lib/categories";
 import { getCartItemCount } from "@/lib/cart/domain";
 import { useCart } from "@/lib/cart/store";
 
-export function MobileMenu({ currentPage = "home" }: { currentPage?: "home" | "cart" }) {
+export function MobileMenu({ currentPage = "home" }: { currentPage?: "home" | "cart" | "product" }) {
   const { items } = useCart();
   const dialog = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
