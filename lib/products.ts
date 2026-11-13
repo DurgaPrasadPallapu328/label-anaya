@@ -8,6 +8,9 @@ export interface Product {
   slug: string;
   categorySlug: string;
   price: number;
+  /** Optional genuine original price in INR; price remains the selling price. */
+  originalPrice?: number;
+  demoDiscount?: boolean;
   image: string;
   images?: readonly ProductImage[];
   sizes?: readonly ProductSizeOption[];
@@ -15,6 +18,15 @@ export interface Product {
 
 // Temporary sample inventory. Prices are in INR. Replace getProducts with database
 // queries when the backend is connected, preserving the Product contract.
+// Temporary reference prices for visual previews only. Remove an entry to disable
+// its demo discount. Genuine offers should use originalPrice in the catalog.
+const demoOriginalPrices: Readonly<Record<string, number>> = {
+  LA001: 1999,
+  LA002: 1777,
+  LA003: 2374,
+  LA004: 1666,
+};
+
 export const products: readonly Product[] = [
   {
     "id": "LA001",
@@ -338,6 +350,9 @@ export const products: readonly Product[] = [
   }
 ].map((product, index) => ({
   ...product,
+  ...(process.env.NODE_ENV === "development" && demoOriginalPrices[product.id]
+    ? { originalPrice: demoOriginalPrices[product.id], demoDiscount: true }
+    : {}),
   // Demo options are not a real stock claim.
   sizes: (index % 2 === 0 ? ["S", "M", "L"] : ["M", "L", "XL"]).map((size) => ({ size: size as ProductSize, enabled: true })),
   images: [

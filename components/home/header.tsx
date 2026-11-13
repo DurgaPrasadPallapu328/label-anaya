@@ -1,3 +1,4 @@
+import { WishlistLink } from "@/components/shop/wishlist-link";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
@@ -6,7 +7,7 @@ import { SearchDialog } from "./search-dialog";
 import { ShopDropdown } from "./shop-dropdown";
 import { CartBagLink } from "@/components/cart/cart-bag-link";
 
-export function Header({ currentPage = "home" }: { currentPage?: "home" | "cart" | "product" }) {
+export function Header({ currentPage = "home" }: { currentPage?: "home" | "cart" | "product" | "wishlist" }) {
   return (
     <header className="site-header relative bg-cream">
       <div className="header-inner relative mx-auto flex h-full items-center justify-between">
@@ -28,6 +29,7 @@ export function Header({ currentPage = "home" }: { currentPage?: "home" | "cart"
         </nav>
         <div className="header-actions ml-auto flex items-center">
           <SearchDialog />
+          <WishlistLink />
           <CartBagLink />
           <Link href="/login" className="icon-button" aria-label="Your account"><Icon name="account" /></Link>
         </div>

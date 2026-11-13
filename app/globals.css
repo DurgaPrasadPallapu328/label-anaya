@@ -356,3 +356,8 @@ body:has(dialog[open]) { overflow: hidden; }
 @media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
   .cart-remove-tooltip { display: block; }
 }
+
+/* Reserve space for all four header actions without overlapping the brand. */
+@media (max-width: 1023px) {
+  .site-header .brand { position: static; left: auto; transform: none; flex: 1; min-width: 0; }
+}
