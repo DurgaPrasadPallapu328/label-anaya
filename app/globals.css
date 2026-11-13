@@ -1,26 +1,218 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fcf6ef;
+  --foreground: #241309;
+  scrollbar-gutter: stable;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-cream: #fcf5ed;
+  --color-peach: #f8ebdc;
+  --color-peach-dark: #f1e1cd;
+  --color-olive: #454f20;
+  --color-olive-dark: #333e16;
+  --color-pale-olive: #eae8d5;
+  --color-muted: #6d604f;
+  --font-serif: "Times New Roman", Times, serif;
 }
 
 body {
+  margin: 0;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-serif);
+  -webkit-tap-highlight-color: transparent;
+}
+
+button, a, input { touch-action: manipulation; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid #454f20; outline-offset: 5px; }
+::selection { background: #daddbf; color: #241309; }
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 100;
+  padding: 12px 18px;
+  background: #fcf5ec;
+  transform: translateY(-160%);
+}
+.skip-link:focus { transform: translateY(0); }
+
+.announcement-bar { min-height: 32px; padding: 5px 12px; font-size: 14px; }
+.announcement-bar svg { width: 20px; height: 20px; }
+.site-header { height: 64px; }
+.header-inner { width: calc(100% - 8px); max-width: 1760px; }
+.icon-button { display: inline-flex; width: 44px; height: 44px; align-items: center; justify-content: center; flex-shrink: 0; border-radius: 3px; }
+.icon-button:hover { color: #454f20; }
+.icon-button > svg { width: 24px; height: 24px; }
+.menu-trigger > svg { width: 27px; height: 27px; }
+.brand { position: absolute; left: 50%; transform: translateX(-50%); min-width: 44px; min-height: 44px; justify-content: center; gap: 5px; }
+.brand-image { width: 36px; height: 36px; }
+.brand-wordmark { display: none; line-height: .92; }
+.brand-wordmark > span:first-child { font-size: 12px; letter-spacing: .13em; margin-bottom: 3px; }
+.brand-wordmark > span:last-child { font-size: 23px; letter-spacing: .015em; }
+.header-actions { gap: 0; }
+.cart-count { top: 0; right: 0; width: 17px; height: 17px; border-radius: 50%; font-size: 12px; }
+
+.hero { min-height: clamp(264px, 66vw, 550px); background: #f8e8d8; }
+.hero-image { right: 0; top: 0; height: 100%; width: 55%; max-width: none; object-fit: cover; object-position: 53% top; mask-image: linear-gradient(to right, transparent, #000 12%); }
+.hero-content { width: 53%; padding: clamp(28px, 8.3vw, 80px) 0 20px 5.4%; }
+.hero-eyebrow { font-size: clamp(9px, 2.6vw, 22px); font-weight: 600; letter-spacing: .26em; line-height: 1.4; }
+.hero-title { margin-top: 9px; font-size: clamp(28px, 8.55vw, 78px); font-weight: 400; letter-spacing: -.035em; line-height: 1.05; }
+.hero-description { max-width: 100%; margin-top: 10px; font-size: clamp(14px, 3.8vw, 32px); line-height: 1.25; }
+.hero-description-middle, .hero-description-ending { display: block; }
+.collection-button { max-width: 100%; margin-top: clamp(16px, 4.3vw, 30px); gap: 10px; border-radius: 7px; padding: 10px clamp(10px, 3vw, 28px); font-size: clamp(12px, 3.55vw, 29px); font-weight: 400; white-space: nowrap; line-height: 1.2; }
+.collection-button svg { width: 18px; height: 18px; flex-shrink: 0; }
+.botanical-divider { width: 84%; gap: 8px; margin-top: 12px; margin-left: 4%; color: #67713c; }
+.botanical-divider > span { height: 1px; flex: 1; background: currentColor; }
+.botanical-sprig { width: 30px; height: 24px; flex-shrink: 0; }
+
+.category-section { width: calc(100% - 24px); padding-top: 20px; }
+.category-heading { gap: clamp(12px, 3.6vw, 28px); margin-bottom: 18px; }
+.category-heading > span { max-width: clamp(50px, 13vw, 118px); height: 1px; flex: 1; background: #554738; }
+.category-heading h2 { font-size: clamp(23px, 5.2vw, 42px); line-height: 1.2; letter-spacing: -.025em; }
+.category-grid { gap: 10px; }
+.category-card { min-height: 60px; gap: 9px; padding: 6px 10px; border-radius: 12px; }
+.category-artwork { width: clamp(40px, 12.5vw, 104px); aspect-ratio: 1.04; mix-blend-mode: darken; }
+/* The five 1536 × 1024 source assets include labels. This window shows
+   the complete garment while keeping those baked-in labels out of view. */
+.category-source { width: 240%; max-width: none; height: auto; left: 50%; top: -17%; transform: translateX(-50%); }
+.category-label { min-width: 0; font-size: clamp(13px, 4.05vw, 30px); line-height: 1.1; }
+.trust-benefits { width: calc(100% - 24px); margin-top: 18px; margin-bottom: 20px; padding: 14px 8px; }
+.trust-benefit { gap: 6px; padding-inline: 6px; }
+.trust-benefit > svg { width: 30px; height: 30px; }
+.trust-benefit > p { font-size: clamp(15px, 4vw, 28px); line-height: 1.1; }
+.trust-benefit + .trust-benefit::before { content: ""; position: absolute; left: 0; top: 20%; height: 68%; width: 1px; background: #989b72; }
+
+dialog { color: var(--foreground); border: 0; padding: 0; }
+dialog::backdrop { background: rgb(36 19 9 / 35%); }
+body:has(dialog[open]) { overflow: hidden; }
+.mobile-menu { position: fixed; inset: 0 auto 0 0; width: min(86vw, 360px); height: 100dvh; max-height: 100dvh; margin: 0; max-width: none; }
+.menu-content { min-height: 100%; padding: 24px; }
+.drawer-link, .dropdown-link { display: block; min-height: 44px; padding: 10px 14px; border-radius: 4px; font-size: 18px; line-height: 1.4; }
+.drawer-link:hover, .dropdown-link:hover { background: #eae8d5; }
+.search-dialog {
+  --search-edge: max(12px, env(safe-area-inset-top, 0px));
+  position: fixed;
+  inset: calc(var(--search-viewport-top, 0px) + var(--search-edge)) 0 auto;
+  width: min(560px, calc(100% - 24px));
+  max-width: none;
+  height: min(540px, calc(var(--search-viewport-height, 100dvh) - var(--search-edge) - max(12px, env(safe-area-inset-bottom, 0px))));
+  max-height: none;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.search-content { display: grid; grid-template-rows: auto minmax(0, 1fr); height: 100%; min-height: 0; }
+.search-header { min-width: 0; padding: 18px 20px 16px; border-bottom: 1px solid #454f2026; background: #fcf5ed; }
+.search-heading { margin-bottom: 12px; }
+.search-input { height: 48px; min-height: 48px; font-family: Arial, Helvetica, sans-serif; font-size: 16px; }
+.search-help { margin-top: 8px; font-size: 13px; line-height: 1.4; }
+.search-results-pane { min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-gutter: stable; padding: 12px 20px 20px; }
+.search-status { min-height: 20px; margin-bottom: 8px; line-height: 20px; }
+.search-option { min-height: 48px; gap: 12px; }
+.search-option[aria-selected="true"] { background: #eae8d5; outline: 1px solid #454f2066; outline-offset: -1px; }
+.search-option > svg { flex-shrink: 0; }
+.search-empty { padding-block: 12px; line-height: 1.4; overflow-wrap: anywhere; }
+.dropdown-link.flex { display: flex; }
+
+@media (min-width: 640px) {
+  .search-dialog { --search-edge: max(24px, env(safe-area-inset-top, 0px)); }
+  .search-header { padding: 22px 24px 18px; }
+  .search-results-pane { padding-inline: 24px; }
+}
+
+/* Keep the full wordmark centered without reducing the 44px icon targets. */
+@media (min-width: 375px) {
+  .brand-image { width: clamp(25px, 6.7vw, 38px); height: clamp(25px, 6.7vw, 38px); }
+  .brand-wordmark { display: block; }
+  .brand-wordmark > span:first-child { font-size: 10px; }
+  .brand-wordmark > span:last-child { font-size: clamp(19px, 5.1vw, 27px); }
+}
+
+@media (min-width: 430px) {
+  .brand-image { width: 38px; height: 38px; }
+  .brand-wordmark > span:first-child { font-size: 13px; }
+  .brand-wordmark > span:last-child { font-size: 24px; }
+  .category-section, .trust-benefits { width: calc(100% - 32px); }
+}
+
+@media (min-width: 640px) {
+  .announcement-bar { min-height: 44px; font-size: 20px; }
+  .announcement-bar svg { width: 26px; height: 26px; }
+  .site-header { height: 100px; }
+  .header-inner { width: calc(100% - 40px); }
+  .brand { gap: 12px; }
+  .brand-image { width: 64px; height: 64px; }
+  .brand-wordmark > span:first-child { font-size: 20px; }
+  .brand-wordmark > span:last-child { font-size: 40px; }
+  .icon-button > svg { width: 30px; height: 30px; }
+  .header-actions { gap: 12px; margin-right: 0; }
+  .cart-count { width: 20px; height: 20px; font-size: 14px; }
+  .hero { min-height: 0; aspect-ratio: 1.64; }
+  .hero-content { padding-top: 8.3%; }
+  .hero-title { margin-top: 18px; }
+  .hero-description { margin-top: 18px; }
+  .collection-button { margin-top: 28px; padding: 14px 22px; gap: 16px; border-radius: 10px; }
+  .collection-button svg { width: 25px; height: 25px; }
+  .botanical-divider { margin-top: 24px; gap: 12px; }
+  .botanical-sprig { width: 46px; height: 32px; }
+  .category-section { width: calc(100% - 48px); padding-top: 30px; }
+  .category-heading { gap: 28px; margin-bottom: 30px; }
+  .category-grid { gap: 16px 20px; }
+  .category-card { min-height: 102px; gap: 16px; padding: 10px 22px; border-radius: 18px; }
+  .category-artwork { width: clamp(74px, 11.5vw, 100px); }
+  .category-label { font-size: clamp(23px, 3.8vw, 30px); }
+  .trust-benefits { width: calc(100% - 48px); padding: 24px 10px; margin-top: 32px; margin-bottom: 32px; border-radius: 24px; }
+  .trust-benefit > svg { width: 46px; height: 46px; }
+  .trust-benefit { gap: 8px; }
+}
+
+@media (min-width: 1024px) {
+  .announcement-bar { min-height: 0; height: clamp(36px, 3.11vw, 60px); gap: clamp(24px, 3vw, 58px); font-size: clamp(14px, 1.2vw, 23px); }
+  .announcement-bar svg { width: clamp(24px, 1.9vw, 36px); height: clamp(24px, 1.9vw, 36px); }
+  .announcement-separator { width: 1px; height: 18px; background: #dddcc7; }
+  .site-header { height: clamp(80px, 6.1vw, 118px); }
+  .header-inner { width: 91.4%; }
+  .brand { position: static; transform: none; gap: 16px; }
+  .brand-image { width: clamp(56px, 4.55vw, 84px); height: clamp(56px, 4.55vw, 84px); }
+  .brand-wordmark > span:first-child { font-size: clamp(18px, 1.8vw, 34px); margin-bottom: 4px; }
+  .brand-wordmark > span:last-child { font-size: clamp(32px, 3.1vw, 58px); }
+  .desktop-navigation { position: absolute; left: 49%; transform: translateX(-50%); gap: clamp(46px, 6vw, 116px); font-size: clamp(20px, 1.55vw, 29px); }
+  .home-link { padding: 9px 8px 7px; border-bottom: 3px solid currentColor; line-height: 1.1; }
+  .header-actions { gap: clamp(20px, 3.2vw, 60px); }
+  .icon-button > svg { width: clamp(26px, 2.1vw, 38px); height: clamp(26px, 2.1vw, 38px); }
+  .cart-count { right: -5px; top: -3px; width: 25px; height: 25px; font-size: 17px; }
+  .shop-dropdown { top: calc(100% + 16px); left: -16px; min-width: 230px; }
+  .hero { height: clamp(360px, 28.47vw, 600px); aspect-ratio: auto; }
+  .hero-image { width: 88%; object-position: 50% 4%; mask-image: linear-gradient(to right, transparent, #000 10%); }
+  .hero-content { width: 48%; padding: 3.95% 0 0 9.85%; }
+  .hero-eyebrow { font-size: clamp(16px, 1.38vw, 26px); letter-spacing: .28em; }
+  .hero-title { margin-top: 10px; font-size: clamp(62px, 6vw, 114px); letter-spacing: -.055em; line-height: 1; }
+  .hero-description { max-width: none; margin-top: 14px; font-size: clamp(23px, 1.92vw, 36px); line-height: 1.15; }
+  .hero-description-middle { display: inline; }
+  .collection-button { margin-top: 20px; min-height: 54px; gap: 26px; padding: 16px 40px; border-radius: 13px; font-size: clamp(20px, 1.75vw, 33px); }
+  .collection-button svg { width: 30px; height: 30px; }
+  .botanical-divider { width: 280px; max-width: 82%; margin-top: 22px; margin-left: 48px; }
+  .botanical-sprig { width: 48px; height: 34px; }
+  .category-section { width: 84.2%; max-width: 1640px; padding-top: 20px; padding-bottom: 32px; }
+  .category-heading { gap: 3.7vw; margin-bottom: 30px; }
+  .category-heading > span { max-width: 150px; }
+  .category-heading h2 { font-size: clamp(30px, 2.3vw, 44px); }
+  .category-grid { gap: 14px; }
+  .category-card { min-height: 0; height: clamp(148px, 10.95vw, 210px); gap: 6px; padding: 10px 12px 16px; border-radius: 20px; }
+  .category-artwork { width: clamp(78px, 6.7vw, 126px); }
+  .category-label { white-space: nowrap; font-size: clamp(21px, 1.75vw, 33px); line-height: 1.1; }
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .hero-content { padding-top: 35px; }
+  .hero-title { font-size: 64px; }
+  .hero-description { font-size: 24px; }
+  .collection-button { margin-top: 20px; padding: 12px 25px; }
+  .botanical-divider { margin-top: 16px; margin-left: 20px; }
 }
