@@ -7,7 +7,7 @@ import { categories } from "@/lib/categories";
 import { getCartItemCount } from "@/lib/cart/domain";
 import { useCart } from "@/lib/cart/store";
 
-export function MobileMenu({ currentPage = "home" }: { currentPage?: "home" | "cart" }) {
+export function MobileMenu({ currentPage = "home" }: { currentPage?: "home" | "cart" | "product" | "wishlist" }) {
   const { items } = useCart();
   const dialog = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
@@ -36,6 +36,7 @@ export function MobileMenu({ currentPage = "home" }: { currentPage?: "home" | "c
             <div className="my-3 border-t border-olive/20" />
             {categories.map((category) => <Link key={category.id} href={`/shop/${category.slug}`} className="drawer-link">{category.name}</Link>)}
             <div className="my-3 border-t border-olive/20" />
+            <Link href="/wishlist" aria-current={currentPage === "wishlist" ? "page" : undefined} className="drawer-link">Wishlist</Link>
             <Link href="/login" className="drawer-link">Your account</Link>
             <Link href="/cart" aria-current={currentPage === "cart" ? "page" : undefined} className="drawer-link">Shopping bag ({getCartItemCount(items)})</Link>
           </nav>

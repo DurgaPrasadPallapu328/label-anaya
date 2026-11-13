@@ -1,14 +1,32 @@
+export type ProductSize = "S" | "M" | "L" | "XL";
+export interface ProductImage { id: string; src: string; alt: string; label: string }
+export interface ProductSizeOption { size: ProductSize; enabled: boolean; maxQuantity?: number }
+
 export interface Product {
   id: string;
   name: string;
   slug: string;
   categorySlug: string;
   price: number;
+  /** Optional genuine original price in INR; price remains the selling price. */
+  originalPrice?: number;
+  demoDiscount?: boolean;
   image: string;
+  images?: readonly ProductImage[];
+  sizes?: readonly ProductSizeOption[];
 }
 
 // Temporary sample inventory. Prices are in INR. Replace getProducts with database
 // queries when the backend is connected, preserving the Product contract.
+// Temporary reference prices for visual previews only. Remove an entry to disable
+// its demo discount. Genuine offers should use originalPrice in the catalog.
+const demoOriginalPrices: Readonly<Record<string, number>> = {
+  LA001: 1999,
+  LA002: 1777,
+  LA003: 2374,
+  LA004: 1666,
+};
+
 export const products: readonly Product[] = [
   {
     "id": "LA001",
@@ -330,7 +348,46 @@ export const products: readonly Product[] = [
     "price": 2299,
     "image": "/images/product-placeholder.svg"
   }
-];
+].map((product, index) => ({
+  ...product,
+  ...(process.env.NODE_ENV === "development" && demoOriginalPrices[product.id]
+    ? { originalPrice: demoOriginalPrices[product.id], demoDiscount: true }
+    : {}),
+  // Demo options are not a real stock claim.
+  sizes: (index % 2 === 0 ? ["S", "M", "L"] : ["M", "L", "XL"]).map((size) => ({ size: size as ProductSize, enabled: true })),
+  images: [
+  {
+    "id": "front",
+    "src": "/images/sample-front.svg",
+    "alt": "Front View sample placeholder, not a garment photograph",
+    "label": "Front View (Sample)"
+  },
+  {
+    "id": "back",
+    "src": "/images/sample-back.svg",
+    "alt": "Back View sample placeholder, not a garment photograph",
+    "label": "Back View (Sample)"
+  },
+  {
+    "id": "side",
+    "src": "/images/sample-side.svg",
+    "alt": "Side View sample placeholder, not a garment photograph",
+    "label": "Side View (Sample)"
+  },
+  {
+    "id": "neckline",
+    "src": "/images/sample-neckline.svg",
+    "alt": "Neckline Detail sample placeholder, not a garment photograph",
+    "label": "Neckline Detail (Sample)"
+  },
+  {
+    "id": "embroidery",
+    "src": "/images/sample-embroidery.svg",
+    "alt": "Sleeve/Embroidery Detail sample placeholder, not a garment photograph",
+    "label": "Sleeve/Embroidery Detail (Sample)"
+  }
+].map((image) => ({ ...image, alt: `${product.name}: ${image.alt}` })),
+}));
 
 export async function getProducts(categorySlug?: string): Promise<readonly Product[]> {
   return categorySlug ? products.filter((product) => product.categorySlug === categorySlug) : products;
