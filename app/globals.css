@@ -43,9 +43,12 @@ button { cursor: pointer; }
 }
 .skip-link:focus { transform: translateY(0); }
 
-.announcement-bar { min-height: 32px; padding: 5px 12px; font-size: 14px; }
-.announcement-bar svg { width: 20px; height: 20px; }
-.site-header { height: 64px; }
+.site-header {
+  height: 64px;
+  background: #fffaf5;
+  border-bottom: 1px solid rgb(107 38 55 / 14%);
+  box-shadow: 0 3px 12px rgb(107 38 55 / 5%);
+}
 .header-inner { width: calc(100% - 8px); max-width: 1760px; }
 .icon-button { display: inline-flex; width: 44px; height: 44px; align-items: center; justify-content: center; flex-shrink: 0; border-radius: 3px; }
 .icon-button:hover { color: #454f20; }
@@ -142,8 +145,6 @@ body:has(dialog[open]) { overflow: hidden; }
 }
 
 @media (min-width: 640px) {
-  .announcement-bar { min-height: 44px; font-size: 20px; }
-  .announcement-bar svg { width: 26px; height: 26px; }
   .site-header { height: 100px; }
   .header-inner { width: calc(100% - 40px); }
   .brand { gap: 12px; }
@@ -173,9 +174,6 @@ body:has(dialog[open]) { overflow: hidden; }
 }
 
 @media (min-width: 1024px) {
-  .announcement-bar { min-height: 0; height: clamp(36px, 3.11vw, 60px); gap: clamp(24px, 3vw, 58px); font-size: clamp(14px, 1.2vw, 23px); }
-  .announcement-bar svg { width: clamp(24px, 1.9vw, 36px); height: clamp(24px, 1.9vw, 36px); }
-  .announcement-separator { width: 1px; height: 18px; background: #dddcc7; }
   .site-header { height: clamp(80px, 6.1vw, 118px); }
   .header-inner { width: 91.4%; }
   .brand { position: static; transform: none; gap: 16px; }
@@ -361,3 +359,16 @@ body:has(dialog[open]) { overflow: hidden; }
 @media (max-width: 1023px) {
   .site-header .brand { position: static; left: auto; transform: none; flex: 1; min-width: 0; }
 }
+
+/* Keep header dropdowns above ordinary content; native dialogs stay in the top layer. */
+.site-header { z-index: 40; overflow: visible; }
+.header-inner, .desktop-navigation { overflow: visible; }
+.wishlist-heart > svg { transition: transform 300ms ease, color 300ms ease; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .wishlist-heart:hover > svg { color: #6a2438; transform: scale(1.12); animation: wishlist-pulse 300ms ease-in-out; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .wishlist-heart:active > svg { transform: scale(.95); }
+}
+@keyframes wishlist-pulse { 0%, 100% { transform: scale(1.12); } 50% { transform: scale(1.06); } }
+@media (prefers-reduced-motion: reduce) { .wishlist-heart > svg { transition: none; } }

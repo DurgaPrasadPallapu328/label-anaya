@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/home/header";
-import { AnnouncementBar } from "@/components/home/announcement-bar";
 import { ProductImageGallery } from "@/components/shop/product-image-gallery";
 import { ProductPurchase } from "@/components/shop/product-purchase";
 import { products } from "@/lib/products";
@@ -13,7 +12,7 @@ type Props = { params: Promise<{ slug: string }> };
 export function generateStaticParams() { return products.map((product) => ({ slug: product.slug })); }
 
 export default function ProductPage({ params }: Props) {
-  return <><a className="skip-link" href="#main-content">Skip to content</a><AnnouncementBar /><Header currentPage="product" /><main id="main-content" className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12"><Suspense fallback={<p role="status" className="py-8 text-muted">Loading product…</p>}><ProductDetails params={params} /></Suspense></main></>;
+  return <><a className="skip-link" href="#main-content">Skip to content</a><Header currentPage="product" /><main id="main-content" className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12"><Suspense fallback={<p role="status" className="py-8 text-muted">Loading product…</p>}><ProductDetails params={params} /></Suspense></main></>;
 }
 
 async function ProductDetails({ params }: Props) {

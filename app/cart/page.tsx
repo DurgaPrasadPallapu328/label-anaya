@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AnnouncementBar } from "@/components/home/announcement-bar";
 import { Header } from "@/components/home/header";
 import { Icon } from "@/components/ui/icon";
 import { CartClient } from "@/components/cart/cart-client";
@@ -12,7 +11,6 @@ export default function CartPage() {
   return (
     <>
       <a className="skip-link" href="#main-content">Skip to content</a>
-      <AnnouncementBar />
       <Header currentPage="cart" />
       <main id="main-content" className="cart-page">
         <nav className="cart-breadcrumb" aria-label="Breadcrumb">

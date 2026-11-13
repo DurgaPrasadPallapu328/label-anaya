@@ -1,11 +1,15 @@
 "use client";
 
+import Image from "next/image";
+import { products } from "@/lib/products";
+import { formatCartMoney } from "@/lib/cart/domain";
 import Link from "next/link";
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { Icon } from "@/components/ui/icon";
 import { categories } from "@/lib/categories";
 
 export function SearchDialog() {
+  const instanceId = useId();
   const dialog = useRef<HTMLDialogElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const input = useRef<HTMLInputElement>(null);
@@ -15,9 +19,15 @@ export function SearchDialog() {
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(-1);
   const normalizedQuery = query.trim().toLocaleLowerCase().replace(/[^a-z0-9]/g, "");
-  const results = categories.filter((category) =>
-    category.name.toLocaleLowerCase().replace(/[^a-z0-9]/g, "").includes(normalizedQuery),
-  );
+  const matches = (name: string) => name.toLocaleLowerCase().replace(/[^a-z0-9]/g, "").includes(normalizedQuery);
+  const categoryResults = categories.filter((category) => matches(category.name)).map((category) => ({
+    key: "category-" + category.id, name: category.name, href: "/shop/" + category.slug, group: "Categories", image: null as string | null, price: null as number | null,
+  }));
+  const productResults = products.filter((product) => matches(product.name)).map((product) => ({
+    key: "product-" + product.id, name: product.name, href: "/products/" + product.slug, group: "Products", image: product.image || "/images/product-placeholder.svg", price: product.price,
+  }));
+  const results = [...new Map([...categoryResults, ...productResults].map((result) => [result.key, result])).values()];
+
 
   useEffect(() => {
     if (!open) return;
@@ -80,9 +90,9 @@ export function SearchDialog() {
         ref={trigger}
         type="button"
         className="icon-button"
-        aria-label="Search collections"
+        aria-label="Search products and categories"
         aria-haspopup="dialog"
-        aria-controls="collection-search-dialog"
+        aria-controls={`${instanceId}-collection-search-dialog`}
         aria-expanded={open}
         onClick={() => {
           setQuery("");
@@ -97,8 +107,8 @@ export function SearchDialog() {
       </button>
       <dialog
         ref={dialog}
-        id="collection-search-dialog"
-        aria-labelledby="search-title"
+        id={`${instanceId}-collection-search-dialog`}
+        aria-labelledby={`${instanceId}-search-title`}
         className="search-dialog rounded-xl bg-cream"
         onClose={() => {
           setOpen(false);
@@ -118,7 +128,7 @@ export function SearchDialog() {
         <div className="search-content">
           <header className="search-header">
             <div className="search-heading flex items-center justify-between gap-3">
-              <h2 id="search-title" className="text-2xl sm:text-3xl">Find your collection</h2>
+              <h2 id={`${instanceId}-search-title`} className="text-2xl sm:text-3xl">Find your collection</h2>
               <button
                 type="button"
                 className="icon-button shrink-0"
@@ -128,12 +138,12 @@ export function SearchDialog() {
                 <Icon name="close" />
               </button>
             </div>
-            <label htmlFor="collection-search" className="mb-2 block text-lg">
-              Search by category
+            <label htmlFor={`${instanceId}-collection-search`} className="mb-2 block text-lg">
+              Search products &amp; categories
             </label>
             <input
               ref={input}
-              id="collection-search"
+              id={`${instanceId}-collection-search`}
               type="search"
               role="combobox"
               value={query}
@@ -149,46 +159,43 @@ export function SearchDialog() {
               spellCheck={false}
               aria-autocomplete="list"
               aria-expanded={results.length > 0}
-              aria-controls="search-results"
-              aria-describedby="search-help"
-              aria-activedescendant={activeIndex >= 0 ? `search-result-${activeIndex}` : undefined}
+              aria-controls={`${instanceId}-search-results`}
+              aria-describedby={`${instanceId}-search-help`}
+              aria-activedescendant={activeIndex >= 0 ? `${instanceId}-result-${activeIndex}` : undefined}
             />
-            <p id="search-help" className="search-help text-muted">
-              Category search only. Product search coming soon.
+            <p id={`${instanceId}-search-help`} className="search-help text-muted">
+              Use the arrow keys to explore suggestions and Enter to select.
             </p>
           </header>
           <div ref={resultsPane} className="search-results-pane">
             <p className="search-status text-sm text-muted" role="status" aria-live="polite" aria-atomic="true">
               {normalizedQuery
-                ? `${results.length} matching ${results.length === 1 ? "category" : "categories"}`
-                : "Explore our five categories"}
+                ? `${results.length} matching results`
+                : "Explore products and categories"}
             </p>
-            <ul id="search-results" role="listbox" aria-label="Matching categories" className="flex flex-col gap-1">
-              {results.map((category, index) => (
-                <li key={category.id} role="presentation">
-                  <Link
-                    ref={(element) => { resultLinks.current[index] = element; }}
-                    id={`search-result-${index}`}
-                    href={`/shop/${category.slug}`}
-                    role="option"
-                    aria-selected={activeIndex === index}
-                    tabIndex={-1}
-                    className="search-option dropdown-link flex items-center justify-between"
-                    onMouseEnter={() => setActiveIndex(index)}
-                    onMouseDown={(event) => event.preventDefault()}
-                    onClick={() => dialog.current?.close()}
-                  >
-                    {category.name} <Icon name="arrow" className="size-5" />
-                  </Link>
-                </li>
+            <div id={`${instanceId}-search-results`} role="listbox" aria-label="Matching products and categories" className="flex flex-col gap-4">
+              {["Categories", "Products"].map((group) => (
+                results.some((result) => result.group === group) && <div key={group} role="group" aria-labelledby={`${instanceId}-${group}`}>
+                  <h3 id={`${instanceId}-${group}`} className="mb-2 text-lg font-bold text-olive">{group}</h3>
+                  {results.map((result, index) => result.group === group && (
+                    <Link key={result.key} ref={(element) => { resultLinks.current[index] = element; }} id={`${instanceId}-result-${index}`} href={result.href} role="option" aria-selected={activeIndex === index} tabIndex={-1} className="search-option dropdown-link flex items-center gap-3" onMouseEnter={() => setActiveIndex(index)} onMouseDown={(event) => event.preventDefault()} onClick={() => dialog.current?.close()}>
+                      {result.image && <SearchThumbnail src={result.image} name={result.name} />}
+                      <span className="min-w-0 flex-1 break-words">{result.name}{result.price !== null && <span className="mt-1 block text-base font-bold text-olive">{formatCartMoney(result.price * 100)}</span>}</span>
+                      <Icon name="arrow" className="size-5 shrink-0" />
+                    </Link>
+                  ))}
+                </div>
               ))}
-            </ul>
-            {results.length === 0 && (
-              <p className="search-empty text-lg">No categories found. Try “Kurtis”, “Dresses”, or “Wear”.</p>
-            )}
+            </div>
+            {results.length === 0 && <p className="search-empty text-lg">No matching products found. Try another name or category.</p>}
           </div>
         </div>
       </dialog>
     </>
   );
+}
+
+function SearchThumbnail({ src, name }: { src: string; name: string }) {
+  const [failed, setFailed] = useState(false);
+  return <span className="relative block h-16 w-12 shrink-0 overflow-hidden rounded-md bg-peach"><Image src={failed ? "/images/product-placeholder.svg" : src} alt={name} fill sizes="48px" className="object-contain" onError={() => setFailed(true)} /></span>;
 }
