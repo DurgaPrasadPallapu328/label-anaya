@@ -4,8 +4,11 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/ui/icon";
 import { categories } from "@/lib/categories";
+import { getCartItemCount } from "@/lib/cart/domain";
+import { useCart } from "@/lib/cart/store";
 
-export function MobileMenu() {
+export function MobileMenu({ currentPage = "home" }: { currentPage?: "home" | "cart" }) {
+  const { items } = useCart();
   const dialog = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
 
@@ -28,13 +31,13 @@ export function MobileMenu() {
             <button type="button" className="icon-button" aria-label="Close navigation" onClick={() => dialog.current?.close()}><Icon name="close" /></button>
           </div>
           <nav aria-label="Mobile navigation" className="mt-5 flex flex-col" onClick={(event) => { if ((event.target as HTMLElement).closest("a")) dialog.current?.close(); }}>
-            <Link href="/" aria-current="page" className="drawer-link">Home</Link>
+            <Link href="/" aria-current={currentPage === "home" ? "page" : undefined} className="drawer-link">Home</Link>
             <Link href="/shop" className="drawer-link">Shop All</Link>
             <div className="my-3 border-t border-olive/20" />
             {categories.map((category) => <Link key={category.href} href={category.href} className="drawer-link">{category.name}</Link>)}
             <div className="my-3 border-t border-olive/20" />
             <Link href="/login" className="drawer-link">Your account</Link>
-            <Link href="/cart" className="drawer-link">Shopping bag (0)</Link>
+            <Link href="/cart" aria-current={currentPage === "cart" ? "page" : undefined} className="drawer-link">Shopping bag ({getCartItemCount(items)})</Link>
           </nav>
         </div>
       </dialog>
