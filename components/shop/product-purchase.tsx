@@ -1,17 +1,19 @@
 "use client";
 
 import { useId, useState, type FormEvent } from "react";
-import { openCartDrawer } from "@/lib/cart/drawer";
+import { holdCartBadge } from "@/lib/cart/badge";
+import { useCartFlight } from "@/components/cart/use-cart-flight";
 import { useRouter } from "next/navigation";
 import type { Product } from "@/lib/products";
 import { preparePurchase } from "@/lib/product-purchase";
 import { cartActions, useCart } from "@/lib/cart/store";
-import { MAX_CART_LINES, MAX_CART_QUANTITY, getProductKey, getCartQuantityLimit } from "@/lib/cart/domain";
+import { MAX_CART_LINES, MAX_CART_QUANTITY, getCartItemCount, getProductKey, getCartQuantityLimit } from "@/lib/cart/domain";
 import { buildCheckoutRequest } from "@/lib/cart/checkout";
 
 export function ProductPurchase({ product }: { product: Product }) {
   const id = useId();
   const router = useRouter();
+  const flyToCart = useCartFlight();
   const cart = useCart();
   const [size, setSize] = useState("");
   const [quantity, setQuantity] = useState("1");
@@ -21,6 +23,7 @@ export function ProductPurchase({ product }: { product: Product }) {
 
   function purchase(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setError(""); setNotice("");
+    let releaseBadge: (() => void) | undefined;
     try {
       const selected = preparePurchase(product, size, Number(quantity));
       if ((event.nativeEvent as SubmitEvent).submitter?.getAttribute("value") === "buy-now") {
@@ -32,11 +35,13 @@ export function ProductPurchase({ product }: { product: Product }) {
         const existing = cart.items.find((line) => getProductKey(line.product) === getProductKey(selected));
         if (!existing && cart.items.length >= MAX_CART_LINES) throw new Error("Your shopping bag is full.");
         if ((existing?.quantity ?? 0) + Number(quantity) > getCartQuantityLimit(selected)) throw new Error("This quantity would exceed the limit for this size in your bag.");
+        releaseBadge = holdCartBadge(getCartItemCount(cart.items));
         cartActions.addItem(selected, Number(quantity));
-        setNotice("Added to your shopping bag.");
-        openCartDrawer((event.nativeEvent as SubmitEvent).submitter);
+        setNotice("Added to Bag \u2713");
+        const source = event.currentTarget.closest("main")?.querySelector<HTMLImageElement>('[data-cart-flight-source="true"]') ?? event.currentTarget.closest("article")?.querySelector<HTMLImageElement>("img") ?? null;
+        flyToCart(source, (event.nativeEvent as SubmitEvent).submitter, true, releaseBadge);
       }
-    } catch (cause) { setError(cause instanceof Error && cause.name !== "SecurityError" && cause.name !== "QuotaExceededError" ? cause.message : "Unable to save your selection. Enable browser storage and try again."); }
+    } catch (cause) { releaseBadge?.(); setError(cause instanceof Error && cause.name !== "SecurityError" && cause.name !== "QuotaExceededError" ? cause.message : "Unable to save your selection. Enable browser storage and try again."); }
   }
 
   return <form onSubmit={purchase} noValidate className="mt-8 space-y-6" aria-describedby={`${id}-status`}>
