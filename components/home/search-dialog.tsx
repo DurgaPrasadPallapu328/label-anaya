@@ -165,11 +165,11 @@ export function SearchDialog() {
             </p>
             <ul id="search-results" role="listbox" aria-label="Matching categories" className="flex flex-col gap-1">
               {results.map((category, index) => (
-                <li key={category.href} role="presentation">
+                <li key={category.id} role="presentation">
                   <Link
                     ref={(element) => { resultLinks.current[index] = element; }}
                     id={`search-result-${index}`}
-                    href={category.href}
+                    href={`/shop/${category.slug}`}
                     role="option"
                     aria-selected={activeIndex === index}
                     tabIndex={-1}

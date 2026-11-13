@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750">
+  <rect width="600" height="750" fill="#f8ebdc"/>
+  <g fill="none" stroke="#454f20" stroke-width="5" stroke-linejoin="round">
+    <path d="M260 240 Q300 270 340 240 L405 285 L365 350 L340 335 L350 485 L250 485 L260 335 L235 350 L195 285 Z"/>
+  </g>
+  <text x="300" y="560" text-anchor="middle" fill="#454f20" font-family="Georgia,serif" font-size="24">Product photo coming soon</text>
+  <text x="300" y="597" text-anchor="middle" fill="#6d604f" font-family="Arial,sans-serif" font-size="16">Temporary placeholder</text>
+</svg>

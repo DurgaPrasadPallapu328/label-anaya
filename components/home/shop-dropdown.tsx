@@ -28,7 +28,7 @@ export function ShopDropdown() {
       }}>Shop All <Icon name="chevron" className="size-5" /></button>
       <div id="shop-categories" hidden={!open} className="shop-dropdown absolute z-30 rounded-lg border border-olive/20 bg-cream p-2">
         <Link href="/shop" className="dropdown-link" onClick={() => setOpen(false)}>Shop All</Link>
-        {categories.map((category) => <Link key={category.href} href={category.href} className="dropdown-link" onClick={() => setOpen(false)}>{category.name}</Link>)}
+        {categories.map((category) => <Link key={category.id} href={`/shop/${category.slug}`} className="dropdown-link" onClick={() => setOpen(false)}>{category.name}</Link>)}
       </div>
     </div>
   );
