@@ -12,8 +12,35 @@ body:has([data-label-anaya-loader="fullscreen"]) .floating-social-contact { visi
   .floating-social-contact { right: max(24px, env(safe-area-inset-right)); bottom: max(24px, env(safe-area-inset-bottom)); }
   .floating-social-button { width: 52px; height: 52px; }
 }
+/* Mascots and greetings are decorative layers; anchor geometry never changes. */
+.floating-social-button { position: relative; }
+.social-original-icon { opacity: 1; }
+.social-mascot { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; pointer-events: none; }
+.floating-social-button .social-mascot svg { width: 36px; height: 36px; }
+.social-greeting { position: absolute; right: calc(100% + 10px); top: 50%; transform: translateY(-50%); width: max-content; max-width: min(170px, calc(100vw - 100px)); padding: 9px 12px; border-radius: 12px; background: #fffaf5; color: #6b2637; font-size: 14px; line-height: 1.35; box-shadow: 0 3px 14px rgb(36 19 9 / 12%); opacity: 0; pointer-events: none; }
+.social-greeting::after { content: ""; position: absolute; right: -4px; top: calc(50% - 4px); width: 8px; height: 8px; background: #fffaf5; transform: rotate(45deg); pointer-events: none; }
 @media (prefers-reduced-motion: no-preference) {
-  .floating-social-button { transition: transform 200ms ease, box-shadow 200ms ease; }
-  .floating-social-button:hover { transform: scale(1.05); box-shadow: 0 4px 14px rgb(0 0 0 / 20%); }
+  .floating-social-button { transition: transform 225ms ease-out, box-shadow 225ms ease-out; }
   .floating-social-button:active { transform: scale(.98); }
+  .floating-social-contact[data-mascot="whatsapp"] .whatsapp-contact .social-mascot,
+  .floating-social-contact[data-mascot="instagram"] .instagram-contact .social-mascot { animation: social-mascot-show 3s ease-in-out both; }
+  .floating-social-contact[data-mascot="whatsapp"] .whatsapp-contact .social-original-icon,
+  .floating-social-contact[data-mascot="instagram"] .instagram-contact .social-original-icon { animation: social-icon-hide 3s ease-in-out both; }
+  .floating-social-contact[data-mascot="whatsapp"] .whatsapp-contact .social-greeting,
+  .floating-social-contact[data-mascot="instagram"] .instagram-contact .social-greeting { animation: social-greeting-show 3s ease-in-out both; }
+  .floating-social-contact[data-mascot="whatsapp"] .social-wave { transform-box: fill-box; transform-origin: bottom left; animation: social-hand-wave 900ms ease-in-out 350ms both; }
+  .floating-social-contact[data-mascot="instagram"] .social-cheer { transform-box: fill-box; transform-origin: center; animation: social-heart-cheer 800ms ease-in-out 350ms both; }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .floating-social-contact:not([data-mascot]) .floating-social-button:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 4px 14px rgb(0 0 0 / 20%); }
+}
+.floating-social-contact[data-animation-paused="true"] * { animation-play-state: paused; }
+@keyframes social-mascot-show { 0%, 100% { opacity: 0; } 10%, 85% { opacity: 1; } }
+@keyframes social-icon-hide { 0%, 100% { opacity: 1; } 10%, 85% { opacity: 0; } }
+@keyframes social-greeting-show { 0%, 100% { opacity: 0; transform: translate(6px, -50%); } 15%, 80% { opacity: 1; transform: translate(0, -50%); } }
+@keyframes social-hand-wave { 0%, 100% { transform: rotate(0); } 35% { transform: rotate(-18deg); } 70% { transform: rotate(12deg); } }
+@keyframes social-heart-cheer { 0%, 100% { transform: rotate(0); } 40% { transform: rotate(-5deg); } 70% { transform: rotate(4deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .social-mascot, .social-greeting { display: none; }
+  .floating-social-button { transition: none; }
 }
