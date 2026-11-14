@@ -379,3 +379,9 @@ body:has(dialog[open]) { overflow: hidden; }
 
 /* A modal bag locks the document while native dialog handles focus and layering. */
 html:has(dialog[open]), body:has(dialog[open]) { overflow: hidden; }
+
+/* Only Shop All loses its heading space; category pages retain their spacing. */
+.shop-layout:has(> .shop-all-heading) { padding-top: 16px; }
+@media (min-width: 640px) {
+  .shop-layout:has(> .shop-all-heading) { padding-top: 24px; }
+}

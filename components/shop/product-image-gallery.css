@@ -1,0 +1,53 @@
+.product-gallery {
+  --gallery-viewport: 100vh;
+  --gallery-top: 10rem;
+  --gallery-height: max(1px, calc(var(--gallery-viewport) - var(--gallery-top) - 1.5rem));
+  min-width: 0;
+}
+
+@supports (height: 100dvh) {
+  .product-gallery { --gallery-viewport: 100dvh; }
+}
+
+.product-gallery-layout {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.product-gallery-main {
+  position: relative;
+  order: 1;
+  width: 100%;
+  min-width: 0;
+  aspect-ratio: 4 / 5;
+  max-height: var(--gallery-height);
+}
+
+/* Insets from next/image plus auto margins center images capped at native size. */
+.product-gallery-image { margin: auto; object-fit: contain; object-position: center; }
+
+.product-gallery-thumbnail-column { order: 2; min-width: 0; }
+.product-gallery-thumbnails {
+  display: flex;
+  min-width: 0;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 4px;
+}
+
+@media (min-width: 1024px) {
+  .product-gallery-layout { height: var(--gallery-height); flex-direction: row; gap: 16px; }
+  .product-gallery-main { order: 2; height: 100%; aspect-ratio: auto; flex: 1; }
+  .product-gallery-thumbnail-column { position: relative; order: 1; width: 72px; flex-shrink: 0; }
+  .product-gallery-thumbnails {
+    position: absolute;
+    inset: 0;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+  }
+}

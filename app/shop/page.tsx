@@ -5,8 +5,8 @@ import { getProducts } from "@/lib/products";
 export default async function ShopPage() {
   return (
     <>
-      <Breadcrumbs current="Shop All" />
-      <h1 className="mb-10 text-center text-4xl text-olive sm:text-5xl">Shop All</h1>
+      <h1 className="shop-all-heading sr-only">Shop All</h1>
+      <Breadcrumbs current="Shop All" className="mb-5 sm:mb-7" />
       <ProductGrid products={await getProducts()} />
     </>
   );

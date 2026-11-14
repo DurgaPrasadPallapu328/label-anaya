@@ -17,6 +17,8 @@ for (const extension of ['.ts', '.tsx']) {
     compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX },
   }).outputText, file);
 }
+// Node's static-render harness has no CSS loader; layout is checked in a browser.
+loadProject.extensions['.css'] = (mod) => { mod.exports = {}; };
 const { products } = loadProject('../lib/products.ts');
 const { preparePurchase } = loadProject('../lib/product-purchase.ts');
 const { addCartItem, getCartItemCount } = loadProject('../lib/cart/domain.ts');

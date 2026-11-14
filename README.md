@@ -155,8 +155,9 @@ for front, back, side, neckline, sleeve/embroidery, fabric, or dupatta details.
 Legacy products with only image still work. Images use portrait contain sizing,
 reduced-motion-aware fades, keyboard-accessible thumbnails, and a native modal
 with previous/next, arrows, Escape, focus containment, and focus restoration.
-Desktop shows five thumbnails before scrolling; mobile puts a horizontal row below
-the image. Failed image requests fall back to the existing product placeholder.
+Desktop keeps a vertical thumbnail rail beside the image and scrolls that rail only
+when the available height requires it; mobile puts a horizontal row below the image.
+Failed image requests fall back to the existing product placeholder.
 
 Optional per-product sizes contain size (S/M/L/XL), enabled, and optional maxQuantity.
 Demo products have varying size lists with unknown stock; enabled is demo configuration
@@ -183,13 +184,139 @@ separate from production orders/payments until the catalog and backend are ready
 
 Run `node --test tests/product-details.test.mjs` for product-specific size/quantity
 validation, existing-cart merging, isolated checkout requests, five valid sample assets,
-and empty/single/multiple-image rendering with unique accessibility IDs. The existing
-`npm run test:cart` suite remains unchanged. TypeScript and ESLint passed; development
-HTTP checks confirmed product/gallery, all five categories, demo routes, cart, and invalid
-product HTTP 404. The final production rebuild was blocked by a Windows EPERM lock on a
-generated .next file; an earlier build passed before the final image/variant data update.
-Browser interaction, focus behavior, responsive overflow, and console checks still require
-a browser QA pass.
+and empty/single/multiple-image rendering with unique accessibility IDs. Its Node
+static-render harness ignores imported CSS; browser checks verify actual layout.
+The existing `npm run test:cart` suite remains unchanged. Current production-build,
+TypeScript, ESLint, and browser results are recorded in the refinements section below.
+
+## Shop All, Product Details, and Wishlist UI Refinements
+
+### Shop All and Wishlist
+
+- `/shop` retains a semantic `h1` using `sr-only`; its large visible heading and
+  heading margin are removed. The **Home > Shop All** breadcrumb and header navigation
+  remain. The breadcrumb-to-grid gap is 20px below 640px and 28px at wider widths.
+- Shop All top padding is 16px below 640px and 24px at wider widths. The rule targets
+  only the Shop All heading inside the shared shop layout, preserving category-page
+  spacing. Product cards, responsive columns, prices, placeholders, and hearts are
+  unchanged.
+- `/wishlist` retains its **Home > Wishlist** breadcrumb and a hidden semantic
+  **Your Wishlist** `h1`. The breadcrumb-to-message and message-to-grid gaps are each
+  16px below 640px and 20px at wider widths; top padding is 16px/24px respectively.
+- The saved-product message still derives from the existing wishlist store, including
+  singular/plural wording. Removal, localStorage persistence, and the existing empty
+  state and collection link remain intact.
+
+### Product Details gallery
+
+- The existing route is `/products/[slug]`. At 1024px and wider, thumbnails remain
+  on the left, the main image in the center, and product information on the right.
+  The outer columns use a 1.4:1 ratio with a 320px information minimum and a 24px gap.
+  Gallery and information start at the same height. Main top padding, breadcrumb
+  spacing, and purchase-form spacing are reduced.
+- The gallery measures its document-position top after layout, which includes the
+  actual shared header height, padding, and wrapped breadcrumb. Desktop image height
+  is the dynamic viewport height minus that measured top and a 24px bottom allowance.
+  CSS uses `100dvh` where supported, with a `100vh` fallback. ResizeObserver, window
+  resize, and visual-viewport resize keep the measurement current. Normal page
+  scrolling does not change the gallery's height.
+- The complete selected image is centered with `object-fit: contain`, preserving its
+  aspect ratio without cropping, stretching, automatic zoom, or image-container
+  scrolling. Loaded main images are capped at their decoded natural dimensions to
+  avoid enlarging small assets. Neutral letterboxing is allowed. The existing
+  click-to-enlarge modal remains available.
+- The desktop thumbnail column is 72px wide and bounded by the main image height.
+  Its 64px by 96px controls stay grouped at the top with 12px gaps. The rail scrolls
+  vertically when its content exceeds the available height; the main image never
+  scrolls independently. Only supplied views are rendered. Selection highlights,
+  reduced-motion-aware fades, arrow/Home/End navigation, and modal focus return remain.
+- Below 1024px, including the 768px tablet layout, the image and horizontal thumbnail
+  row precede readable product information in normal document flow. The mobile/tablet
+  image box keeps its portrait aspect ratio subject to the same viewport height limit.
+  This avoids a cramped three-column tablet layout and horizontal page overflow.
+- Product data, size availability, pricing, quantity validation, cart integration,
+  and isolated demo Buy Now behavior are unchanged.
+
+### Accessibility and SEO
+
+Shop All and Wishlist keep accessible level-one headings without consuming visible
+layout space. Breadcrumb labels/current-page semantics, thumbnail button names and
+pressed states, focus indicators, and the wishlist live status are preserved. Existing
+metadata exports and inherited titles/descriptions are unchanged; no SEO content or
+navigation labels were removed.
+
+### Files modified
+
+| File | Change |
+| --- | --- |
+| `app/shop/page.tsx` | Hidden Shop All heading and compact breadcrumb spacing. |
+| `app/shop/layout.tsx` | Class hook for Shop All-only padding. |
+| `app/globals.css` | Route-scoped Shop All top-padding rules. |
+| `app/wishlist/page.tsx` | Hidden heading and reduced page/breadcrumb spacing. |
+| `components/shop/breadcrumbs.tsx` | Optional spacing class; existing default preserved. |
+| `components/shop/wishlist-view.tsx` | Reduced live-message-to-grid spacing. |
+| `app/products/[slug]/page.tsx` | Reduced spacing and balanced desktop columns. |
+| `components/shop/product-image-gallery.tsx` | Measured gallery offset, bounded thumbnails, native-image size caps. |
+| `components/shop/product-image-gallery.css` | Component-prefixed viewport/responsive gallery rules (new). |
+| `components/shop/product-purchase.tsx` | Reduced form spacing only. |
+| `tests/product-details.test.mjs` | CSS import support in the existing static-render test harness. |
+| `README.md` | Current behavior, validation, file list, and limitations. |
+
+The only existing `docs/` page covers the cart; its integration contract did not change.
+
+### Validation and actual results
+
+- `node node_modules/typescript/bin/tsc --noEmit`: passed.
+- `npm.cmd run lint`: passed.
+- `npm.cmd run build`: passed; all 56 pages generated successfully.
+- `node --test tests/product-details.test.mjs`: 4/4 passed.
+- `npm.cmd run test:cart`: 8/8 passed.
+- `node --test tests/cart-flight.test.mjs tests/cart-badge.test.mjs`: 2/2 passed.
+- Production pages were exercised in installed headless Chrome through the Chrome
+  DevTools Protocol, without adding dependencies. All three routes passed at every
+  requested viewport below. Gaps are measured from element bounds; desktop image
+  bottoms stayed at least 24px above the viewport bottom, allowing for rounding.
+
+| Viewport | Shop breadcrumb/grid gap | Wishlist gaps (each) | Main image box height | Result |
+| --- | --- | --- | --- | --- |
+| 320 x 700 | 20px | 16px | 360px | Passed |
+| 375 x 812 | 20px | 16px | 429px | Passed |
+| 390 x 844 | 20px | 16px | 448px | Passed |
+| 768 x 1024 | 28px | 20px | 828px | Passed |
+| 1366 x 768 | 28px | 20px | 589px | Passed |
+| 1440 x 900 | 28px | 20px | 717px | Passed |
+| 1920 x 1080 | 28px | 20px | 867px | Passed |
+
+Browser checks confirmed hidden headings with an accessible Shop All heading, retained
+breadcrumbs, actual spacing, unchanged responsive card counts, dynamic wishlist
+2-to-1-to-empty updates and reload persistence, no horizontal page overflow, centered
+contain sizing, native-size caps, all five thumbnail selections, keyboard selection,
+modal opening/Escape/focus return, and desktop information alignment. Additional checks
+passed at 1366 x 550 for independent thumbnail scrolling and stable main-image height
+during page scrolling; wrapped breadcrumbs also triggered correct height recalculation.
+Synthetic tall, wide, and small assets passed containment/size checks. Failed-image
+fallback and subsequent thumbnail selection passed. Size/quantity, Add to Cart, and the
+Buy Now redirect/isolated selection passed at mobile and desktop widths without changing
+the bag during Buy Now. The category page retained its 48px top padding and 32px breadcrumb
+margin. No runtime exceptions or `console.error` calls occurred during these checks.
+
+The existing CSS loader interprets CSS Module output as plain CSS, so the gallery uses
+component-prefixed plain CSS, matching the existing cart components. A successful build
+alone did not detect the missing module class references; production browser checks
+identified it and verified the plain-CSS implementation. An intermediate rebuild also
+encountered a locked QA browser profile inside `.next`; moving temporary QA artifacts
+outside the build directory allowed the final build to pass. Local browser artifacts
+are kept under ignored `coverage/ui-refinements-qa/`.
+
+### Known limitations
+
+The catalog currently contains 600 x 750 sample SVGs and existing placeholders, with
+no real garment photographs. Container geometry, object-fit behavior, and synthetic
+aspect ratios were verified; checking complete real dresses, their image quality, and
+product-specific views remains pending real catalog assets. Physical-device browser
+chrome/rotation, Safari/Firefox, and screen-reader testing remain manual follow-ups.
+The `vh` fallback was inspected in CSS but not exercised in an older browser without
+`dvh` support. Catalog, authentication, and checkout remain existing demo integrations.
 
 ## WhatsApp customer support
 
