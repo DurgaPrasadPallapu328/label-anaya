@@ -6,10 +6,13 @@ import { Icon } from "@/components/ui/icon";
 import { categories } from "@/lib/categories";
 import { getCartItemCount } from "@/lib/cart/domain";
 import { useCart } from "@/lib/cart/store";
+import { openCartDrawer } from "@/lib/cart/drawer";
 
 export function MobileMenu({ currentPage = "home" }: { currentPage?: "home" | "cart" | "product" | "wishlist" }) {
   const { items } = useCart();
   const dialog = useRef<HTMLDialogElement>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
+  const openBagAfterClose = useRef(false);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -21,10 +24,18 @@ export function MobileMenu({ currentPage = "home" }: { currentPage?: "home" | "c
 
   return (
     <div className="lg:hidden">
-      <button type="button" className="icon-button menu-trigger" aria-label="Open navigation" aria-expanded={open} aria-controls="mobile-navigation" onClick={() => { dialog.current?.showModal(); setOpen(true); }}>
+      <button ref={trigger} type="button" className="icon-button menu-trigger" aria-label="Open navigation" aria-expanded={open} aria-controls="mobile-navigation" onClick={() => { dialog.current?.showModal(); setOpen(true); }}>
         <Icon name="menu" />
       </button>
-      <dialog ref={dialog} id="mobile-navigation" aria-labelledby="mobile-menu-title" className="mobile-menu bg-cream" onClose={() => setOpen(false)} onClick={(event) => { if (event.target === event.currentTarget) dialog.current?.close(); }}>
+      <dialog ref={dialog} id="mobile-navigation" aria-labelledby="mobile-menu-title" className="mobile-menu bg-cream" onClose={() => {
+        setOpen(false);
+        if (openBagAfterClose.current) {
+          openBagAfterClose.current = false;
+          // The menu has left the top layer; return focus to its visible trigger
+          // when the shared bag drawer subsequently closes.
+          openCartDrawer(trigger.current);
+        }
+      }} onClick={(event) => { if (event.target === event.currentTarget) dialog.current?.close(); }}>
         <div className="menu-content">
           <div className="flex items-center justify-between gap-4 border-b border-olive/20 pb-5">
             <h2 id="mobile-menu-title" className="text-2xl">Label Anaya</h2>
@@ -38,7 +49,7 @@ export function MobileMenu({ currentPage = "home" }: { currentPage?: "home" | "c
             <div className="my-3 border-t border-olive/20" />
             <Link href="/wishlist" aria-current={currentPage === "wishlist" ? "page" : undefined} className="drawer-link">Wishlist</Link>
             <Link href="/login" className="drawer-link">Your account</Link>
-            <Link href="/cart" aria-current={currentPage === "cart" ? "page" : undefined} className="drawer-link">Shopping bag ({getCartItemCount(items)})</Link>
+            <button type="button" aria-haspopup="dialog" className="drawer-link text-left" onClick={() => { openBagAfterClose.current = true; dialog.current?.close(); }}>Shopping bag ({getCartItemCount(items)})</button>
           </nav>
         </div>
       </dialog>

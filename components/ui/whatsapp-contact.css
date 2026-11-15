@@ -4,8 +4,6 @@
 .instagram-contact { background: linear-gradient(135deg, #833ab4, #c13584 55%, #e1306c); }
 .floating-social-button svg { display: block; width: 28px; height: 28px; }
 .floating-social-button:focus-visible { outline: 3px solid #454f20; outline-offset: 4px; }
-/* Let final page actions scroll fully above both floating controls. */
-.whatsapp-contact-space { height: calc(140px + env(safe-area-inset-bottom)); }
 body:has(dialog[open]) .floating-social-contact,
 body:has([data-label-anaya-loader="fullscreen"]) .floating-social-contact { visibility: hidden; pointer-events: none; }
 @media (min-width: 768px) {

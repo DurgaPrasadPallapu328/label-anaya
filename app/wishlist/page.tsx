@@ -10,7 +10,7 @@ export default function WishlistPage() {
     <>
       <a className="skip-link" href="#main-content">Skip to content</a>
       <Header currentPage="wishlist" />
-      <main id="main-content" className="mx-auto min-h-[60vh] w-full max-w-7xl px-4 py-4 sm:px-6 sm:py-6">
+      <main id="main-content" className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 sm:py-6">
         <h1 className="sr-only">Your Wishlist</h1>
         <Breadcrumbs current="Wishlist" className="mb-4 sm:mb-5" />
         <WishlistView />

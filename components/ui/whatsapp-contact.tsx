@@ -114,7 +114,6 @@ export function WhatsAppContact() {
 
   return (
     <>
-      <div className="whatsapp-contact-space" aria-hidden="true" />
       <div ref={socialGroup} className="floating-social-contact">
       <a className="floating-social-button instagram-contact" href="https://www.instagram.com/styledbyanaya._/" target="_blank" rel="noopener noreferrer" aria-label="Follow Styled by Anaya on Instagram" title="Follow us">
         <span className="social-mascot social-heart" aria-hidden="true"><HeartMascot /></span>

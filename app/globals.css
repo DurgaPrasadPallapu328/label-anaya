@@ -30,6 +30,10 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* One natural page ending, including devices with a home indicator. */
+#main-content { padding-bottom: calc(clamp(1.5rem, 2.5vw, 2rem) + env(safe-area-inset-bottom)); }
+#main-content > :last-child { margin-bottom: 0; }
+
 button, a, input { touch-action: manipulation; }
 button { cursor: pointer; }
 :focus-visible { outline: 2px solid #454f20; outline-offset: 5px; }
@@ -59,9 +63,9 @@ button { cursor: pointer; }
 .icon-button:hover { color: #454f20; }
 .icon-button > svg { width: 24px; height: 24px; }
 .menu-trigger > svg { width: 27px; height: 27px; }
-.brand { position: absolute; left: 50%; transform: translateX(-50%); min-width: 44px; min-height: 44px; justify-content: center; gap: 5px; }
-.brand-image { width: 36px; height: 36px; }
-.brand-wordmark { display: none; line-height: .92; }
+.brand { min-width: 44px; min-height: 44px; justify-content: center; gap: 5px; white-space: nowrap; }
+.brand-image { width: 36px; height: 36px; flex-shrink: 0; }
+.brand-wordmark { display: block; flex-shrink: 0; line-height: .92; }
 .brand-wordmark > span:first-child { font-size: 12px; letter-spacing: .13em; margin-bottom: 3px; }
 .brand-wordmark > span:last-child { font-size: 23px; letter-spacing: .015em; }
 .header-actions { gap: 0; }
@@ -134,12 +138,12 @@ body:has(dialog[open]) { overflow: hidden; }
   .search-results-pane { padding-inline: 24px; }
 }
 
-/* Keep the full wordmark centered without reducing the 44px icon targets. */
-@media (min-width: 375px) {
-  .brand-image { width: clamp(25px, 6.7vw, 38px); height: clamp(25px, 6.7vw, 38px); }
-  .brand-wordmark { display: block; }
-  .brand-wordmark > span:first-child { font-size: 10px; }
-  .brand-wordmark > span:last-child { font-size: clamp(19px, 5.1vw, 27px); }
+/* Keep the complete lockup within the space left by the five 44px controls. */
+@media (max-width: 639px) {
+  .brand { gap: clamp(3px, .8vw, 5px); }
+  .brand-image { width: clamp(24px, 6.7vw, 38px); height: clamp(24px, 6.7vw, 38px); }
+  .brand-wordmark > span:first-child { font-size: clamp(8px, 2.65vw, 13px); }
+  .brand-wordmark > span:last-child { font-size: clamp(15px, 6vw - 4px, 27px); }
 }
 
 @media (min-width: 430px) {
