@@ -225,8 +225,8 @@ TypeScript, ESLint, and browser results are recorded in the refinements section 
   scrolling. Loaded main images are capped at their decoded natural dimensions to
   avoid enlarging small assets. Neutral letterboxing is allowed. The existing
   click-to-enlarge modal remains available.
-- The desktop thumbnail column is 72px wide and bounded by the main image height.
-  Its 64px by 96px controls stay grouped at the top with 12px gaps. The rail scrolls
+- The desktop thumbnail column is 96px wide and bounded by the main image height.
+  Its 76px by 114px controls stay grouped at the top with 12px gaps. The rail scrolls
   vertically when its content exceeds the available height; the main image never
   scrolls independently. Only supplied views are rendered. Selection highlights,
   reduced-motion-aware fades, arrow/Home/End navigation, and modal focus return remain.
@@ -339,3 +339,164 @@ and one local SVG icon. It hides while any native dialog or fullscreen loader is
 A small bottom spacer lets the final page actions scroll above the fixed button.
 Browser checks should confirm visual placement/checkout clearance on target devices
 and open the configured business chat without sending a message.
+
+## Responsive Layout, Sticky Navigation, Product Gallery and Cart Animation
+
+The existing shared header, gallery, product grid, wishlist and delivery animation
+are reused. Changes are local and uncommitted on `Durga_staging`; no dependencies,
+catalog data, cart mutation/persistence rules, authentication or checkout flows changed.
+
+### Navigation and announcements
+
+`.site-header` uses CSS `position: sticky; top: 0` with its existing background,
+border, shadow and responsive heights. Its z-index of 40 places it above cards and
+floating social controls. Dropdowns stay in that stacking context; native search,
+navigation and cart dialogs use the browser's top layer. Header ancestors do not
+introduce a scrolling container during ordinary browsing. No scroll listener controls
+the header, and there is no duplicated header or placeholder gap.
+
+There is currently no announcement bar. An announcement placed as a sibling before
+the shared header scrolls away normally; only the navigation sticks at viewport top.
+This arrangement was verified using a temporary 48px announcement in the QA browser.
+The shared `--site-header-height` token also supplies root scroll padding, leaving
+anchor destinations below the navigation. Mobile menus and desktop dropdowns scroll
+internally when their contents exceed the available viewport height.
+
+### Gallery dimensions and image fitting
+
+At the default 16px root font size, desktop thumbnails increase from **64 × 96px to
+76 × 114px**, an **18.75% width increase**, retaining their 2:3 aspect ratio. All
+thumbnails share `clamp(4rem, 8vw + 2rem, 4.75rem)` width and 12px gaps. At 1024px and
+wider, the vertical rail is 96px wide, including padding and scrollbar clearance,
+and is bounded by the main image height. Only the rail scrolls when necessary.
+Below 1024px the row remains horizontal: thumbnails scale from 64px on small phones
+to 76px on tablets, scrolling inside the rail instead of widening the page.
+
+The main gallery retains `object-fit: contain`, centered positioning, natural-image
+size caps and its measured document-top offset. Its height uses `100dvh` with a
+`100vh` fallback, minus the actual gallery top and a 1.5rem bottom allowance. It has
+no internal image scrolling, cropping or stretching. The desktop information column
+keeps its existing flexible ratio and 20rem minimum. Supplied image ordering, selected
+borders, keyboard selection, failed-image fallback and the enlarge dialog remain.
+
+### Burgundy bird delivery
+
+The existing SVG silhouette and wing shapes use the bird-specific
+`--cart-bird-color: #800020` token, with burgundy shading and feather strokes.
+The outfit clone retains its original colors and becomes the existing small parcel
+under the bird. Olive website accents and the bag icon retain their existing colors.
+
+`CART_FLIGHT_DURATION = 2000` controls one immediate Web Animations API movement.
+Pickup and wing movement happen concurrently; no entrance or pickup stage delays
+the flight. The carrier follows a sampled quadratic Bézier curve with smooth
+acceleration/deceleration and continuous scaling, reaching the bag at **2000ms**.
+Browser completion callbacks can arrive a rendering frame after the timeline ends.
+The existing one-second pause before automatically opening the bag starts after
+delivery; it is separate from the two-second flight.
+
+Every action measures the actual DOM rectangles again. The launch point is the
+visible part of the selected image below the sticky header, or the visible purchase
+button when the image is offscreen. The destination is the center of the visible
+header bag SVG. A fixed, non-interactive overlay keeps these viewport coordinates
+accurate on scrolled pages without scrolling the customer to the header. If scrolling
+or resizing moves the bag during flight, a continuous correction uses the remaining
+original animation time; it does not restart or extend the 2000ms clock. An unchanged
+sticky bag requires no correction animation.
+
+The purchase form updates cart state/localStorage immediately and shows its existing
+accessible `role="status"` confirmation. The existing presentation-only badge hold
+releases at delivery. Animation callbacks never add products. A new click cancels the
+previous visual flight while preserving each real addition. Route changes, manual
+bag opening, other dialogs, hidden documents and unmounting clean up animations,
+observers, listeners and timers. The overlay is removed at delivery and never captures
+pointer events. Reduced motion skips flight and immediately releases the badge and
+opens the existing bag. Changing that preference during flight also stops motion.
+Unavailable source images, targets or browser animation support use the same fallback.
+Product cards currently have no Add to Cart control, so none was added to the grids.
+
+### Responsive sizing strategy
+
+Existing page maximum widths, mobile-first grid column counts, typography and brand
+styling remain. Hero and category cards now use minimum heights so wrapping content
+can grow. Hero headings/buttons and category labels can wrap. Product grid gaps are
+fluid, grid children can shrink within their tracks, cart summary lines can wrap,
+and empty-wishlist/cart-loading spacing is bounded by viewport height. The product
+heading uses a rem-based fluid clamp. Text containers have no new fixed heights.
+
+| CSS mechanism | Purpose |
+| --- | --- |
+| `%` and flexible `fr`/`minmax(0, …)` tracks | Parent-relative widths and balanced product/gallery/information columns. |
+| `vw` inside bounded `clamp()` | Thumbnail widths, grid gaps and existing responsive header/hero sizing. |
+| `vh`, then `dvh` | Viewport-dependent menus, dropdowns, gallery and empty/loading spacing; fallback for older browsers. |
+| `rem`, `min()`, `max()` and `clamp()` | Font-relative bounds, safe spacing and fluid typography without unlimited scaling. |
+| `aspect-ratio` and `object-fit` | Consistent cards and undistorted gallery images. |
+| `px` | Existing touch targets, icons, borders, thumbnail gaps and measured DOM coordinates. |
+
+Phones keep the hamburger, logo and four action icons, two product columns and a
+horizontal gallery rail. Tablets retain horizontal thumbnails and readable information
+below the image. From 1024px, laptops/desktops use the established three-part product
+layout and desktop navigation. Wide monitors retain existing maximum content widths.
+
+### Files modified
+
+- `app/globals.css`: sticky header/token, anchor clearance and shared responsive styles.
+- `components/home/header.tsx`: removes the conflicting relative-position utility.
+- `components/shop/product-image-gallery.css` and `.tsx`: fluid wider thumbnails and bounded rail.
+- `app/products/[slug]/page.tsx`: fluid product-heading class.
+- `components/shop/product-grid.tsx` and `wishlist-view.tsx`: shared responsive sizing hooks.
+- `components/cart/use-cart-flight.ts`: immediate two-second curved flight and lifecycle cleanup.
+- `lib/cart/dove.ts`: recolored existing bird artwork.
+- `components/shop/product-purchase.tsx`: updated visual-hook invocation only.
+- `tests/cart-flight.test.mjs`: timing, geometry, retargeting, cancellation and reduced-motion regression checks.
+- `README.md` and `docs/pages/cart.md`: behavior, validation and limitations.
+
+### Testing performed and results
+
+- `npm.cmd run lint`: passed.
+- `node node_modules/typescript/bin/tsc --noEmit`: passed.
+- `npm.cmd run build`: passed; all 56 pages generated.
+- `node --experimental-strip-types --test tests/*.test.mjs`: all 14 tests passed.
+  Node emits its existing module-type warning when stripping the domain TypeScript;
+  this does not fail the tests or require a package-module change.
+- Production headless Chrome, controlled through its DevTools Protocol without new
+  dependencies: all nine required viewports passed the checks below.
+
+| Viewports tested | Result |
+| --- | --- |
+| 320 × 700, 375 × 812, 390 × 844, 430 × 932 | Passed |
+| 768 × 1024, 820 × 1180 | Passed |
+| 1366 × 768, 1440 × 900, 1920 × 1080 | Passed |
+
+At every viewport, homepage, Shop All, Kurtis, product details, populated wishlist,
+cart, checkout and login had no horizontal page overflow and retained one sticky
+header during downward/upward scrolling. Desktop dropdown/mobile navigation, search
+results, all five thumbnail selections, arrow/Home keys, enlarge/Escape/focus return,
+contain fitting and rail alignment passed. Each Add to Cart persisted immediately,
+launched from the expected image/button without a page jump, used the selected image
+and burgundy bird, and reached the actual bag center with less than 0.01px measured
+error. The flight timeline was exactly 2000ms; observed completion callbacks arrived
+after 2006–2040ms including frame scheduling. Reduced motion, a temporary announcement
+above the header, and independent rail scrolling at 1366 × 550 also passed.
+
+Additional production Chrome checks passed for a bag destination moving 40px during
+flight (correction and flight ended at the same timeline time), two rapid additions
+with one active visual flight, manual bag opening without later automatic reopening,
+and route-change cleanup. Cart quantity changes, reload persistence, removal
+cancel/confirmation, wishlist removal/persistence and mobile/desktop Buy Now → demo
+sign-in → checkout preserved their existing behavior. Checks at intermediate 640px
+and 1024px widths, anchor clearance, non-overlapping header controls and doubled root
+font sizing passed. No page exceptions or console errors occurred in these scenarios.
+
+Temporary QA scripts, results and screenshots are under ignored
+`coverage/responsive-cart-qa/`; they are not application assets.
+
+### Known limitations and manual verification
+
+The catalog still uses labelled sample SVG views, rather than real garment photographs.
+Contain geometry is verified, but neckline-to-hem content and photograph quality need
+real catalog assets. Physical phones/tablets, Safari/Firefox, browser chrome/rotation,
+screen readers and a browser without `dvh` support remain manual checks. Browser
+emulation and doubled root-font checks do not substitute for physical-device text
+zoom and accessibility testing. Checkout/authentication retain the existing demo and
+coming-soon behavior. No live announcement or product-card Add to Cart control exists
+to test beyond the temporary announcement scenario and existing purchase form.

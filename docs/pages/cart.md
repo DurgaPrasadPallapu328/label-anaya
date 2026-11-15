@@ -148,6 +148,38 @@ To integrate the backend without changing the visual components:
 
 ## Validation
 
+### Sticky header and bird delivery
+
+The shared navigation is now sticky at `top: 0`, above content and floating social
+buttons. No announcement currently exists; a preceding sibling announcement can
+scroll away independently. Root scroll padding reserves the responsive header height
+for anchors. Native bag/search/navigation/removal dialogs remain in the top layer.
+
+`useCartFlight` remains visual-only. The existing burgundy bird (`#800020`) carries
+the selected outfit on one immediate, curved **2000ms** flight. Image-to-parcel pickup
+and wing motion run alongside movement. Each action measures the visible selected
+image (or the visible purchase trigger if that image is offscreen) and the real bag
+SVG center. A fixed pointer-transparent overlay avoids scroll offsets and page jumps.
+If the bag moves during flight, endpoint correction shares the original completion
+time. A stable sticky target needs no correction. The existing automatic drawer
+opening still follows a separate one-second pause after delivery.
+
+Cart mutations/persistence and the accessible Added to Bag status happen immediately;
+the existing visual badge hold releases on delivery. No animation callback adds items.
+Rapid additions cancel older visual flights, and navigation, dialog opening, hidden
+documents, preference changes and unmounting clean up animation resources. Reduced
+motion skips the flight and immediately shows the shared bag with the updated count.
+Missing image/target/animation support follows that same fallback. Product-card grids
+have no purchase control; animation coverage therefore applies to the existing PDP.
+
+Cart loading and empty-wishlist spacing use bounded viewport heights with `vh`/`dvh`
+fallbacks, summary rows can wrap, and existing flexible grids/max-widths are retained.
+The PDP rail now uses 76 × 114px desktop controls (18.75% wider), 64–76px horizontal
+controls on phones/tablets and a viewport-bounded contain-fit main image. See
+[the responsive implementation and validation](../../README.md#responsive-layout-sticky-navigation-product-gallery-and-cart-animation)
+for modified files, the CSS unit rationale, all nine tested viewport sizes, test
+commands, results and remaining physical-device/browser accessibility checks.
+
 Run `npm run test:cart`, `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
 The pure tests use Node's built-in test runner and TypeScript stripping (Node 22.18+
 or a newer release); no testing dependency is required. Browser checks should cover

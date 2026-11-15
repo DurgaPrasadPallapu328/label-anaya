@@ -39,7 +39,7 @@ export function ProductPurchase({ product }: { product: Product }) {
         cartActions.addItem(selected, Number(quantity));
         setNotice("Added to Bag \u2713");
         const source = event.currentTarget.closest("main")?.querySelector<HTMLImageElement>('[data-cart-flight-source="true"]') ?? event.currentTarget.closest("article")?.querySelector<HTMLImageElement>("img") ?? null;
-        flyToCart(source, (event.nativeEvent as SubmitEvent).submitter, true, releaseBadge);
+        flyToCart(source, (event.nativeEvent as SubmitEvent).submitter, releaseBadge);
       }
     } catch (cause) { releaseBadge?.(); setError(cause instanceof Error && cause.name !== "SecurityError" && cause.name !== "QuotaExceededError" ? cause.message : "Unable to save your selection. Enable browser storage and try again."); }
   }

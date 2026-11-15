@@ -3,7 +3,10 @@
 :root {
   --background: #fcf6ef;
   --foreground: #241309;
+  --site-header-height: 64px;
+  --cart-bird-color: #800020;
   scrollbar-gutter: stable;
+  scroll-padding-top: calc(var(--site-header-height) + 1rem);
 }
 
 @theme inline {
@@ -44,7 +47,9 @@ button { cursor: pointer; }
 .skip-link:focus { transform: translateY(0); }
 
 .site-header {
-  height: 64px;
+  position: sticky;
+  top: 0;
+  height: var(--site-header-height);
   background: #fffaf5;
   border-bottom: 1px solid rgb(107 38 55 / 14%);
   box-shadow: 0 3px 12px rgb(107 38 55 / 5%);
@@ -95,7 +100,7 @@ button { cursor: pointer; }
 dialog { color: var(--foreground); border: 0; padding: 0; }
 dialog::backdrop { background: rgb(36 19 9 / 35%); }
 body:has(dialog[open]) { overflow: hidden; }
-.mobile-menu { position: fixed; inset: 0 auto 0 0; width: min(86vw, 360px); height: 100dvh; max-height: 100dvh; margin: 0; max-width: none; }
+.mobile-menu { position: fixed; inset: 0 auto 0 0; width: min(86vw, 360px); height: 100vh; height: 100dvh; max-height: 100vh; max-height: 100dvh; margin: 0; max-width: none; overflow-y: auto; overscroll-behavior: contain; }
 .menu-content { min-height: 100%; padding: 24px; }
 .drawer-link, .dropdown-link { display: block; min-height: 44px; padding: 10px 14px; border-radius: 4px; font-size: 18px; line-height: 1.4; }
 .drawer-link:hover, .dropdown-link:hover { background: #eae8d5; }
@@ -145,7 +150,7 @@ body:has(dialog[open]) { overflow: hidden; }
 }
 
 @media (min-width: 640px) {
-  .site-header { height: 100px; }
+  :root { --site-header-height: 100px; }
   .header-inner { width: calc(100% - 40px); }
   .brand { gap: 12px; }
   .brand-image { width: 64px; height: 64px; }
@@ -154,7 +159,7 @@ body:has(dialog[open]) { overflow: hidden; }
   .icon-button > svg { width: 30px; height: 30px; }
   .header-actions { gap: 12px; margin-right: 0; }
   .cart-count { width: 20px; height: 20px; font-size: 14px; }
-  .hero { min-height: 0; aspect-ratio: 1.64; }
+  .hero { min-height: calc(100vw / 1.64); }
   .hero-content { padding-top: 8.3%; }
   .hero-title { margin-top: 18px; }
   .hero-description { margin-top: 18px; }
@@ -174,7 +179,7 @@ body:has(dialog[open]) { overflow: hidden; }
 }
 
 @media (min-width: 1024px) {
-  .site-header { height: clamp(80px, 6.1vw, 118px); }
+  :root { --site-header-height: clamp(80px, 6.1vw, 118px); }
   .header-inner { width: 91.4%; }
   .brand { position: static; transform: none; gap: 16px; }
   .brand-image { width: clamp(56px, 4.55vw, 84px); height: clamp(56px, 4.55vw, 84px); }
@@ -186,7 +191,7 @@ body:has(dialog[open]) { overflow: hidden; }
   .icon-button > svg { width: clamp(26px, 2.1vw, 38px); height: clamp(26px, 2.1vw, 38px); }
   .cart-count { right: -5px; top: -3px; width: 25px; height: 25px; font-size: 17px; }
   .shop-dropdown { top: calc(100% + 16px); left: -16px; min-width: 230px; }
-  .hero { height: clamp(360px, 28.47vw, 600px); aspect-ratio: auto; }
+  .hero { min-height: clamp(360px, 28.47vw, 600px); }
   .hero-image { width: 88%; object-position: 50% 4%; mask-image: linear-gradient(to right, transparent, #000 10%); }
   .hero-content { width: 48%; padding: 3.95% 0 0 9.85%; }
   .hero-eyebrow { font-size: clamp(16px, 1.38vw, 26px); letter-spacing: .28em; }
@@ -202,7 +207,7 @@ body:has(dialog[open]) { overflow: hidden; }
   .category-heading > span { max-width: 150px; }
   .category-heading h2 { font-size: clamp(30px, 2.3vw, 44px); }
   .category-grid { gap: 14px; }
-  .category-card { min-height: 0; height: clamp(148px, 10.95vw, 210px); gap: 6px; padding: 10px 12px 16px; border-radius: 20px; }
+  .category-card { min-height: clamp(148px, 10.95vw, 210px); gap: 6px; padding: 10px 12px 16px; border-radius: 20px; }
   .category-artwork { width: clamp(78px, 6.7vw, 126px); }
   .category-label { white-space: nowrap; font-size: clamp(21px, 1.75vw, 33px); line-height: 1.1; }
 }
@@ -278,7 +283,7 @@ body:has(dialog[open]) { overflow: hidden; }
 .cart-empty > svg { width: 54px; height: 54px; stroke-width: 1.1; color: #69743d; }
 .cart-empty > h2 { font-size: 30px; }
 .cart-empty > p { font-size: 18px; color: #6d604f; }
-.cart-loading { display: grid; place-items: center; min-height: 360px; font-size: 22px; color: #6d604f; }
+.cart-loading { display: grid; place-items: center; min-height: clamp(12rem, 40vh, 22.5rem); min-height: clamp(12rem, 40dvh, 22.5rem); font-size: 22px; color: #6d604f; }
 .cart-storage-note { margin-bottom: 16px; padding: 12px; border: 1px solid #d8d9bd; border-radius: 8px; background: #eae8d5; }
 .cart-dev-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 20px; padding: 14px; margin-top: 32px; border: 1px dashed #b9b89b; border-radius: 8px; color: #6d604f; font-family: Arial, Helvetica, sans-serif; font-size: 12px; }
 .cart-dev-controls button { min-height: 44px; padding: 10px 14px; border: 1px solid #69743d; border-radius: 6px; color: #454f20; }
@@ -336,6 +341,18 @@ body:has(dialog[open]) { overflow: hidden; }
 /* Keep header dropdowns above ordinary content; native dialogs stay in the top layer. */
 .site-header { z-index: 40; overflow: visible; }
 .header-inner, .desktop-navigation { overflow: visible; }
+.shop-dropdown { max-height: calc(100vh - var(--site-header-height) - 2rem); max-height: calc(100dvh - var(--site-header-height) - 2rem); overflow-y: auto; overscroll-behavior: contain; }
+
+/* Content can grow with wrapping and text zoom; media keep their existing proportions. */
+.hero-content { padding-bottom: clamp(1.25rem, 2.5vw, 3rem); }
+.hero-title, .collection-button { white-space: normal; }
+.category-label { white-space: normal; overflow-wrap: anywhere; }
+.product-grid { gap: clamp(.75rem, 2vw, 1.5rem); }
+.product-grid > li { min-width: 0; }
+.wishlist-empty { padding-block: clamp(2rem, 8vh, 4rem); padding-block: clamp(2rem, 8dvh, 4rem); }
+.cart-summary dl > div { flex-wrap: wrap; }
+.cart-summary dd { margin-left: auto; max-width: 100%; }
+.product-details-title { font-size: clamp(1.875rem, 1.35rem + 1.8vw, 2.25rem); overflow-wrap: anywhere; }
 .wishlist-heart > svg { transition: transform 300ms ease, color 300ms ease; }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .wishlist-heart:hover > svg { color: #6a2438; transform: scale(1.12); animation: wishlist-pulse 300ms ease-in-out; }
