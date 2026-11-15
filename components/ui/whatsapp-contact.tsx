@@ -10,6 +10,27 @@ export function WhatsAppContact() {
 
   useEffect(() => {
     const group = socialGroup.current;
+    const viewport = window.visualViewport;
+    if (!group || !viewport) return;
+    // Fixed positioning follows the layout viewport. Zoom and browser chrome can
+    // make the visible viewport smaller or offset within it.
+    const update = () => {
+      group.style.setProperty("--social-viewport-bottom", `${Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop)}px`);
+      group.style.setProperty("--social-viewport-right", `${Math.max(0, document.documentElement.clientWidth - viewport.width - viewport.offsetLeft)}px`);
+    };
+    update();
+    viewport.addEventListener("resize", update);
+    viewport.addEventListener("scroll", update);
+    window.addEventListener("resize", update);
+    return () => {
+      viewport.removeEventListener("resize", update);
+      viewport.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+
+  useEffect(() => {
+    const group = socialGroup.current;
     if (!group) return;
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let timer: ReturnType<typeof setTimeout> | undefined;
