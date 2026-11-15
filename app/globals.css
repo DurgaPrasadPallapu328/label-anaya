@@ -63,11 +63,12 @@ button { cursor: pointer; }
 .icon-button:hover { color: #454f20; }
 .icon-button > svg { width: 24px; height: 24px; }
 .menu-trigger > svg { width: 27px; height: 27px; }
-.brand { min-width: 44px; min-height: 44px; justify-content: center; gap: 5px; white-space: nowrap; }
-.brand-image { width: 36px; height: 36px; flex-shrink: 0; }
-.brand-wordmark { display: block; flex-shrink: 0; line-height: .92; }
-.brand-wordmark > span:first-child { font-size: 12px; letter-spacing: .13em; margin-bottom: 3px; }
-.brand-wordmark > span:last-child { font-size: 23px; letter-spacing: .015em; }
+.brand { min-width: 44px; min-height: 44px; justify-content: center; gap: clamp(3px, .8vw, 8px); white-space: nowrap; }
+.brand-image { width: auto; height: clamp(32px, 8.8vw, 38px); aspect-ratio: 1221 / 1288; flex-shrink: 0; }
+.brand-wordmark { display: block; flex-shrink: 0; color: #6b2637; text-align: center; font-weight: 400; line-height: 1; }
+.brand-label { display: block; font-size: clamp(7px, 1.9vw, 8px); letter-spacing: .3em; padding-left: .3em; margin-bottom: 3px; }
+.brand-name { display: block; font-size: clamp(14px, 5vw - 2px, 23px); letter-spacing: .1em; padding-left: .1em; }
+.brand-wordmark::after { content: ""; display: block; width: 24px; height: 1px; margin: 4px auto 0; background: #989b72; }
 .header-actions { gap: 0; }
 .cart-count { top: 0; right: 0; width: 17px; height: 17px; border-radius: 50%; font-size: 12px; }
 
@@ -138,28 +139,22 @@ body:has(dialog[open]) { overflow: hidden; }
   .search-results-pane { padding-inline: 24px; }
 }
 
-/* Keep the complete lockup within the space left by the five 44px controls. */
-@media (max-width: 639px) {
-  .brand { gap: clamp(3px, .8vw, 5px); }
-  .brand-image { width: clamp(24px, 6.7vw, 38px); height: clamp(24px, 6.7vw, 38px); }
-  .brand-wordmark > span:first-child { font-size: clamp(8px, 2.65vw, 13px); }
-  .brand-wordmark > span:last-child { font-size: clamp(15px, 6vw - 4px, 27px); }
+/* Keep every control alongside the complete brand on the narrowest phones. */
+@media (max-width: 359px) {
+  .site-header .icon-button { width: 40px; }
 }
 
 @media (min-width: 430px) {
-  .brand-image { width: 38px; height: 38px; }
-  .brand-wordmark > span:first-child { font-size: 13px; }
-  .brand-wordmark > span:last-child { font-size: 24px; }
   .category-section, .trust-benefits { width: calc(100% - 32px); }
 }
 
 @media (min-width: 640px) {
-  :root { --site-header-height: 100px; }
+  :root { --site-header-height: 68px; }
   .header-inner { width: calc(100% - 40px); }
-  .brand { gap: 12px; }
-  .brand-image { width: 64px; height: 64px; }
-  .brand-wordmark > span:first-child { font-size: 20px; }
-  .brand-wordmark > span:last-child { font-size: 40px; }
+  .brand { gap: 10px; }
+  .brand-image { height: 44px; }
+  .brand-label { font-size: 9px; }
+  .brand-name { font-size: 27px; }
   .icon-button > svg { width: 30px; height: 30px; }
   .header-actions { gap: 12px; margin-right: 0; }
   .cart-count { width: 20px; height: 20px; font-size: 14px; }
@@ -183,12 +178,11 @@ body:has(dialog[open]) { overflow: hidden; }
 }
 
 @media (min-width: 1024px) {
-  :root { --site-header-height: clamp(80px, 6.1vw, 118px); }
+  :root { --site-header-height: 72px; }
   .header-inner { width: 91.4%; }
-  .brand { position: static; transform: none; gap: 16px; }
-  .brand-image { width: clamp(56px, 4.55vw, 84px); height: clamp(56px, 4.55vw, 84px); }
-  .brand-wordmark > span:first-child { font-size: clamp(18px, 1.8vw, 34px); margin-bottom: 4px; }
-  .brand-wordmark > span:last-child { font-size: clamp(32px, 3.1vw, 58px); }
+  .brand { gap: 10px; }
+  .brand-image { height: 54px; }
+  .brand-name { font-size: clamp(28px, 2vw, 32px); }
   .desktop-navigation { position: absolute; left: 49%; transform: translateX(-50%); gap: clamp(46px, 6vw, 116px); font-size: clamp(20px, 1.55vw, 29px); }
   .home-link { padding: 9px 8px 7px; border-bottom: 3px solid currentColor; line-height: 1.1; }
   .header-actions { gap: clamp(20px, 3.2vw, 60px); }

@@ -14,14 +14,14 @@ export function Header({ currentPage = "home" }: { currentPage?: "home" | "cart"
         <MobileMenu currentPage={currentPage} />
         <Link href="/" className="brand flex items-center" aria-label="Label Anaya home">
           <Image
-            src="/images/Anaya-logo.jpg"
+            src="/images/anaya-golden-monogram.png"
             alt=""
-            width={1254}
-            height={1254}
-            sizes="(min-width: 1024px) 84px, (min-width: 640px) 64px, 38px"
-            className="brand-image rounded-sm object-contain"
+            width={1221}
+            height={1288}
+            sizes="(min-width: 1024px) 52px, (min-width: 640px) 42px, 36px"
+            className="brand-image object-contain"
           />
-          <span className="brand-wordmark text-center" aria-hidden="true"><span className="block">LABEL</span><span className="block">ANAYA</span></span>
+          <span className="brand-wordmark" aria-hidden="true"><span className="brand-label">LABEL</span><span className="brand-name">ANAYA</span></span>
         </Link>
         <nav className="desktop-navigation hidden items-center lg:flex" aria-label="Main navigation">
           <Link href="/" aria-current={currentPage === "home" ? "page" : undefined} className={currentPage === "home" ? "home-link" : "nav-link"}>Home</Link>
