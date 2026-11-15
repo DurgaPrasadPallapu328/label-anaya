@@ -9,12 +9,13 @@ import { categories } from "@/lib/categories";
 import { ProductInformationAccordion } from "@/components/shop/product-information";
 import { RelatedProducts } from "@/components/shop/related-products";
 import { ProductPrice } from "@/components/shop/product-price";
+import { BrandLoader } from "@/components/ui/brand-loader";
 
 type Props = { params: Promise<{ slug: string }> };
 export function generateStaticParams() { return products.map((product) => ({ slug: product.slug })); }
 
 export default function ProductPage({ params }: Props) {
-  return <><a className="skip-link" href="#main-content">Skip to content</a><Header currentPage="product" /><main id="main-content" className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 sm:py-6"><Suspense fallback={<p role="status" className="py-8 text-muted">Loading product…</p>}><ProductDetails params={params} /></Suspense></main></>;
+  return <><a className="skip-link" href="#main-content">Skip to content</a><Header currentPage="product" /><main id="main-content" className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 sm:py-6"><Suspense fallback={<BrandLoader />}><ProductDetails params={params} /></Suspense></main></>;
 }
 
 async function ProductDetails({ params }: Props) {

@@ -4,6 +4,7 @@ import { categories } from "@/lib/categories";
 import { getProducts } from "@/lib/products";
 import { Breadcrumbs } from "@/components/shop/breadcrumbs";
 import { ProductGrid } from "@/components/shop/product-grid";
+import { BrandLoader } from "@/components/ui/brand-loader";
 
 export function generateStaticParams() {
   return categories.map((category) => ({ category: category.slug }));
@@ -13,7 +14,7 @@ type CategoryPageProps = { params: Promise<{ category: string }> };
 
 export default function CategoryPage({ params }: CategoryPageProps) {
   return (
-    <Suspense fallback={<p role="status" className="py-8 text-lg text-muted">Loading collection…</p>}>
+    <Suspense fallback={<BrandLoader />}>
       <CategoryContent params={params} />
     </Suspense>
   );

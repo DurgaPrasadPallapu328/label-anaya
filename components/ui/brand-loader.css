@@ -1,0 +1,172 @@
+﻿.anaya-loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: rgb(255 250 245 / 18%);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  color: #f3ce8a;
+  pointer-events: none;
+}
+.anaya-loading-stage {
+  --anaya-loader-size: min(34vw, 130px, calc(50svh - 24px));
+  position: relative;
+  width: var(--anaya-loader-size);
+  height: var(--anaya-loader-size);
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  border-radius: 50%;
+  background: rgb(57 0 14 / 94%);
+  box-shadow: 0 10px 36px rgb(57 0 14 / 16%);
+}
+.anaya-loading-halo {
+  position: absolute;
+  inset: 6%;
+  border-radius: 50%;
+  background: radial-gradient(circle, transparent 57%, rgb(247 195 104 / 8%) 65%, transparent 74%);
+  animation: anaya-loading-breathe 3s ease-in-out infinite;
+}
+.anaya-loading-ring { position: absolute; border-radius: 50%; pointer-events: none; }
+.anaya-loading-ring-one {
+  inset: 3%;
+  border: 2px solid transparent;
+  border-top-color: #ffe6ab;
+  border-right-color: #bc7c3b;
+  filter: drop-shadow(0 0 9px #f5c577);
+  animation: anaya-loading-spin 5s linear infinite;
+}
+.anaya-loading-ring-two {
+  inset: 7%;
+  border: 1px solid rgb(245 197 119 / 26%);
+  border-bottom: 2px solid #f5d59a;
+  border-left: 1px solid #a96935;
+  animation: anaya-loading-spin 8s linear infinite reverse;
+}
+.anaya-loading-ring-three {
+  inset: 11%;
+  border: 1px dashed rgb(244 192 103 / 23%);
+  animation: anaya-loading-spin 24s linear infinite;
+}
+.anaya-loading-orbit { position: absolute; inset: 3%; animation: anaya-loading-spin 5s linear infinite; }
+.anaya-loading-orbit::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #fff1c7;
+  box-shadow: 0 0 14px 5px rgb(255 205 124 / 80%);
+}
+.anaya-loading-spark {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #ffe3a2;
+  border-radius: 50%;
+  box-shadow: 0 0 9px #ffda8b;
+  animation: anaya-loading-twinkle 2.5s ease-in-out infinite alternate;
+}
+.anaya-loading-spark-one { top: 9%; left: 19%; }
+.anaya-loading-spark-two { top: 23%; right: 6%; animation-delay: .7s; }
+.anaya-loading-spark-three { bottom: 13%; left: 11%; animation-delay: 1.4s; }
+.anaya-loading-spark-four { bottom: 7%; right: 25%; animation-delay: 2s; }
+.anaya-loading-emblem {
+  position: relative;
+  width: 73%;
+  height: 73%;
+  border-radius: 50%;
+  clip-path: circle(49% at 50% 50%);
+  background: #39000e;
+  z-index: 2;
+  filter: drop-shadow(0 4px 18px rgb(0 0 0 / 16%));
+}
+.anaya-loading-reference-text {
+  object-fit: contain;
+  mix-blend-mode: lighten;
+  /* Preserve the supplied lettering and ornament exactly, excluding its old A. */
+  clip-path: inset(52% 0 24%);
+}
+.anaya-loading-monogram {
+  position: absolute;
+  top: 13%;
+  left: 50%;
+  width: auto;
+  height: 38%;
+  max-width: 48%;
+  object-fit: contain;
+  transform: translateX(-50%);
+}
+@keyframes anaya-loading-spin { to { transform: rotate(360deg); } }
+@keyframes anaya-loading-breathe { 50% { opacity: .45; transform: scale(1.04); } }
+@keyframes anaya-loading-twinkle { to { opacity: .15; transform: scale(.5); } }
+.anaya-loading-caption {
+  position: absolute;
+  top: calc(100% + 18px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(280px, calc(100vw - 32px));
+  color: #8a5a18;
+  text-align: center;
+}
+.anaya-loading-messages {
+  display: grid;
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 14px;
+  font-weight: 600;
+  font-style: italic;
+  line-height: 1.5;
+}
+.anaya-loading-messages > span {
+  grid-area: 1 / 1;
+  white-space: nowrap;
+  opacity: 0;
+  animation: anaya-loading-message 16s linear infinite;
+}
+.anaya-loading-character {
+  display: inline-block;
+  max-width: 0;
+  overflow: hidden;
+  vertical-align: bottom;
+  white-space: pre;
+  opacity: 0;
+  animation: anaya-loading-character 16s steps(1, end) infinite;
+}
+.anaya-loading-messages > span::after {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 1em;
+  margin-left: 3px;
+  vertical-align: -.12em;
+  background: currentColor;
+  animation: anaya-loading-cursor 800ms steps(1, end) infinite;
+}
+@keyframes anaya-loading-message {
+  0%, 21% { opacity: 1; }
+  24%, 100% { opacity: 0; }
+}
+@keyframes anaya-loading-character {
+  0%, 24% { max-width: 1.5em; opacity: 1; }
+  24.01%, 100% { max-width: 0; opacity: 0; }
+}
+@keyframes anaya-loading-cursor {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+/* Preserve access to the site even if the introductory layer cannot hydrate. */
+.anaya-loading-startup { animation: anaya-loading-failsafe 0s 7s forwards; }
+@keyframes anaya-loading-failsafe { to { visibility: hidden; } }
+@media (prefers-reduced-motion: reduce) {
+  .anaya-loading-ring, .anaya-loading-orbit, .anaya-loading-halo, .anaya-loading-spark { animation: none; }
+  .anaya-loading-messages > span { animation: none; display: none; }
+  .anaya-loading-messages > span:first-child { display: block; opacity: 1; transform: none; }
+  .anaya-loading-character { animation: none; max-width: none; opacity: 1; }
+  .anaya-loading-messages > span::after { display: none; animation: none; }
+}
