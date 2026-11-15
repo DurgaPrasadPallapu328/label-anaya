@@ -340,6 +340,55 @@ A small bottom spacer lets the final page actions scroll above the fixed button.
 Browser checks should confirm visual placement/checkout clearance on target devices
 and open the configured business chat without sending a message.
 
+### Floating social button visibility
+
+The missing WhatsApp control was caused by absent configuration:
+`getWhatsAppUrl` returned `null` when `NEXT_PUBLIC_WHATSAPP_NUMBER` was unset, and
+the existing `{href && ...}` guard omitted the WhatsApp anchor from the DOM.
+Instagram does not have that configuration guard. No screen-width condition,
+offscreen translation, ancestor clipping or stacking error was found.
+
+The owner's approved support number is now configured in the ignored `.env.local`
+as international digits, without the display-only leading `+`. The existing number
+validator, WhatsApp message, URL construction and Instagram profile are unchanged.
+
+Both controls retain one viewport-level fixed container mounted by the root layout,
+with Instagram above WhatsApp, a 12px gap, 16px mobile/24px larger-screen offsets,
+safe-area support and z-index 30. Their 48px/52px sizes, colors, hover shadows,
+mascots, icon fades and speech bubbles are unchanged. Native dialogs/cart drawers
+and full-screen loaders continue to hide both controls and pause the animation.
+No positioning, animation, navbar, gallery, cart or checkout source change was needed.
+
+`NEXT_PUBLIC_` values are embedded at build time. Keep the approved number configured
+in every development/hosting environment and restart development or rebuild/redeploy
+after changing configuration. Changing only the environment of an already-built
+production server does not update its client bundle. `.env.local` is intentionally
+untracked; deployment must supply the same approved value in its build environment.
+
+Validation: TypeScript, ESLint and the production build passed (56 generated pages).
+Production Chrome used actual browser zoom of 90%, 100%, 125% and 150% in an isolated
+profile. Both the homepage and product page passed at every zoom and each requested
+viewport: 1024 × 768, 1280 × 720, 1366 × 768, 1440 × 900, 1536 × 864, 1920 × 1080,
+768 × 1024, 820 × 1180, 1024 × 1366, 320 × 568, 375 × 667, 390 × 844 and 430 × 932
+(104 page/viewport/zoom combinations). Both buttons stayed within the visible viewport
+and fixed while scrolling, in the correct order, with working hit targets and the
+unchanged destinations/message. Navigation to external social services was prevented
+only in the QA browser; no messages were sent.
+
+Additional checks passed for touch emulation, Shop All/category/wishlist/cart/login/
+checkout pages, native cart/gallery dialogs, a temporary full-screen loader, reduced
+motion, actual 15-second mascot scheduling and 3-second animations, speech bubbles,
+hover shadows/scaling and focus pause/resume. Add to Cart still persists immediately,
+uses the 2000ms bird flight and restores both controls after the drawer closes.
+No browser exceptions or console errors occurred. Screenshots and diagnostic scripts
+are under ignored `coverage/social-visibility-qa/`.
+
+At 320px with 150% desktop browser zoom (about 213 CSS pixels), the existing header
+creates 21px horizontal page overflow; both social controls remain fully visible.
+Hiding the social container in QA left that overflow unchanged; temporarily hiding
+the header removed it. The navbar was preserved as requested. Physical devices,
+notched safe areas, Safari/Firefox and the live WhatsApp account remain manual checks.
+
 ## Responsive Layout, Sticky Navigation, Product Gallery and Cart Animation
 
 The existing shared header, gallery, product grid, wishlist and delivery animation
