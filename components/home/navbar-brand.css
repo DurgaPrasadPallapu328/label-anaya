@@ -1,0 +1,167 @@
+/* Deliberately namespaced plain CSS: the project's custom CSS loader does not
+   export CSS Module class names. Structural bounds also live in the markup. */
+[data-navbar-brand] {
+  --anaya-brand-width: 105px;
+  --anaya-brand-height: 42px;
+  --anaya-logo-height: 35px;
+  contain: layout paint;
+  white-space: nowrap;
+}
+[data-navbar-brand] .anaya-navbar-artwork {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 1px 1px rgb(158 111 40 / 18%));
+  transition: transform 280ms ease, filter 280ms ease;
+}
+[data-navbar-brand] .anaya-navbar-word {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  margin-left: -2px;
+  padding-top: 8px;
+  color: #98651c;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: .035em;
+}
+[data-navbar-brand] .anaya-navbar-letter {
+  display: inline-block;
+  padding-bottom: 3px;
+  background-image:
+    linear-gradient(110deg, transparent 40%, #fff0b0 50%, transparent 60%),
+    linear-gradient(165deg, #b17c27 10%, #8b5d1b 35%, #d5ad57 53%, #99671d 76%);
+  background-size: 250% 100%, 100% 100%;
+  background-position: 150% 0, center;
+  background-repeat: no-repeat;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+[data-navbar-brand] .anaya-navbar-word::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 2px;
+  bottom: 1px;
+  height: 1px;
+  background: linear-gradient(90deg, #a8782d, #edcf8c 60%, transparent);
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+}
+[data-navbar-brand] .anaya-navbar-ribbon { opacity: 0; }
+[data-navbar-brand] .anaya-navbar-glint {
+  position: absolute;
+  inset: 0 auto 0 3px;
+  width: calc(var(--anaya-logo-height) * 1221 / 1288);
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 35%, rgb(255 246 213 / 80%) 50%, transparent 65%) -60px 0 / 160px 100% no-repeat;
+  mask: url('/images/anaya-golden-monogram.png') center / contain no-repeat;
+}
+[data-navbar-brand] .anaya-navbar-sparkle {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  opacity: 0;
+  pointer-events: none;
+  background: #d4ad61;
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+}
+[data-navbar-brand] .anaya-navbar-sparkle-one { left: 2px; top: 7px; }
+[data-navbar-brand] .anaya-navbar-sparkle-two { left: calc(var(--anaya-logo-height) - 2px); top: 5px; }
+[data-navbar-brand] .anaya-navbar-sparkle-three { left: calc(var(--anaya-logo-height) + 19px); bottom: 4px; width: 3px; height: 3px; }
+[data-navbar-brand][data-reveal] .anaya-navbar-monogram {
+  transform-origin: center;
+  animation: anaya-navbar-logo-unveil 850ms cubic-bezier(.22,.61,.36,1) 450ms both;
+}
+[data-navbar-brand][data-reveal] .anaya-navbar-letter {
+  animation: anaya-navbar-unveil 360ms cubic-bezier(.22,.61,.36,1) both,
+    anaya-navbar-letter-sheen 500ms ease-in-out both;
+}
+[data-navbar-brand][data-reveal] .anaya-navbar-word::after {
+  animation: anaya-navbar-signature-stroke 900ms cubic-bezier(.22,.61,.36,1) 2100ms both;
+}
+[data-navbar-brand][data-reveal] .anaya-navbar-ribbon {
+  animation: anaya-navbar-ribbon-fade 1500ms ease both;
+}
+[data-navbar-brand][data-reveal] .anaya-navbar-silk {
+  stroke-dasharray: 26 100;
+  animation: anaya-navbar-ribbon-trace 1500ms cubic-bezier(.4,0,.2,1) both;
+}
+[data-navbar-brand][data-reveal] .anaya-navbar-artwork {
+  animation: anaya-navbar-finish 300ms ease 2400ms backwards;
+}
+[data-navbar-brand][data-reveal] .anaya-navbar-glint { animation: anaya-navbar-glint 650ms ease 2250ms both; }
+[data-navbar-brand][data-reveal] .anaya-navbar-sparkle { animation: anaya-navbar-sparkle 550ms ease 2300ms both; }
+[data-navbar-brand][data-reveal] .anaya-navbar-sparkle-two { animation-delay: 2450ms; }
+[data-navbar-brand][data-reveal] .anaya-navbar-sparkle-three { animation-delay: 2400ms; }
+@keyframes anaya-navbar-unveil {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes anaya-navbar-letter-sheen {
+  from { background-position: 150% 0, center; }
+  to { background-position: -50% 0, center; }
+}
+@keyframes anaya-navbar-signature-stroke {
+  0% { opacity: 0; transform: scaleX(0); }
+  45% { opacity: .65; transform: scaleX(1); }
+  70% { opacity: .4; transform: scaleX(1); }
+  100% { opacity: 0; transform: scaleX(1); }
+}
+@keyframes anaya-navbar-logo-unveil {
+  from { opacity: 0; transform: rotate(-4deg) scale(.94); }
+  to { opacity: 1; transform: rotate(0) scale(1); }
+}
+@keyframes anaya-navbar-glint {
+  0% { opacity: 0; background-position: -100px 0; }
+  35%, 60% { opacity: .65; }
+  100% { opacity: 0; background-position: 40px 0; }
+}
+@keyframes anaya-navbar-sparkle {
+  0%, 100% { opacity: 0; transform: scale(.6); }
+  45% { opacity: .85; transform: scale(1); }
+}
+@keyframes anaya-navbar-ribbon-trace {
+  from { stroke-dashoffset: 26; }
+  to { stroke-dashoffset: -100; }
+}
+@keyframes anaya-navbar-ribbon-fade {
+  0% { opacity: 0; }
+  15%, 75% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes anaya-navbar-finish {
+  from { filter: drop-shadow(0 0 0 rgb(158 111 40 / 0%)); }
+  to { filter: drop-shadow(0 1px 1px rgb(158 111 40 / 18%)); }
+}
+@media (min-width: 640px) {
+  [data-navbar-brand] { --anaya-brand-width: 136px; --anaya-brand-height: 50px; --anaya-logo-height: 43px; }
+  [data-navbar-brand] .anaya-navbar-word { font-size: 31px; padding-top: 10px; }
+}
+@media (min-width: 1024px) {
+  [data-navbar-brand] { --anaya-brand-width: 164px; --anaya-brand-height: 60px; --anaya-logo-height: 52px; }
+  [data-navbar-brand] .anaya-navbar-word { font-size: 38px; padding-top: 12px; }
+}
+@media (hover: hover) and (pointer: fine) {
+  a:hover > [data-navbar-brand] .anaya-navbar-artwork {
+    transform: translateY(-2px);
+    filter: drop-shadow(0 2px 2px rgb(158 111 40 / 28%));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-navbar-brand][data-reveal] .anaya-navbar-monogram,
+  [data-navbar-brand][data-reveal] .anaya-navbar-letter,
+  [data-navbar-brand][data-reveal] .anaya-navbar-word::after,
+  [data-navbar-brand][data-reveal] .anaya-navbar-ribbon,
+  [data-navbar-brand][data-reveal] .anaya-navbar-silk,
+  [data-navbar-brand][data-reveal] .anaya-navbar-glint,
+  [data-navbar-brand][data-reveal] .anaya-navbar-sparkle,
+  [data-navbar-brand][data-reveal] .anaya-navbar-artwork { animation: none; }
+  [data-navbar-brand] .anaya-navbar-artwork { transition: none; }
+  a:hover > [data-navbar-brand] .anaya-navbar-artwork { transform: none; }
+}
