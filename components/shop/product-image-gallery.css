@@ -42,8 +42,14 @@
 .product-gallery-thumbnail { width: var(--gallery-thumbnail-width); aspect-ratio: 2 / 3; }
 
 @media (min-width: 1024px) {
-  .product-gallery-layout { height: var(--gallery-height); flex-direction: row; gap: 16px; }
-  .product-gallery-main { order: 2; height: 100%; aspect-ratio: auto; flex: 1; }
+  /* Balance garment visibility with the natural height of the purchase details.
+     The measured top offset still limits the gallery on shorter viewports. */
+  .product-gallery {
+    --gallery-desktop-height: min(var(--gallery-height), clamp(28rem, calc(var(--gallery-viewport) * .6), 34rem));
+  }
+  /* Let image width set the row height; the viewport limit is a ceiling, not a target. */
+  .product-gallery-layout { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 16px; }
+  .product-gallery-main { order: 2; max-height: var(--gallery-desktop-height); }
   .product-gallery-thumbnail-column { position: relative; order: 1; width: calc(var(--gallery-thumbnail-width) + 1.25rem); flex-shrink: 0; }
   .product-gallery-thumbnails {
     position: absolute;
